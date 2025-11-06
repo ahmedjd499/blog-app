@@ -1,0 +1,34 @@
+﻿<div class="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="text-center mb-12">
+      <h1 class="text-5xl font-extrabold text-gray-900 mb-4">Welcome to Blog Platform</h1>
+      <p class="text-xl text-gray-600">A collaborative multi-author blogging platform built with MEAN Stack</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8 mt-12">
+      <div class="bg-white p-6 rounded-xl shadow-lg">
+        <div class="text-purple-600 text-4xl mb-4"></div>
+        <h3 class="text-xl font-bold mb-2">Write Articles</h3>
+        <p class="text-gray-600">Create and publish your articles with image support</p>
+      </div>
+
+      <div class="bg-white p-6 rounded-xl shadow-lg">
+        <div class="text-purple-600 text-4xl mb-4"></div>
+        <h3 class="text-xl font-bold mb-2">Real-time Comments</h3>
+        <p class="text-gray-600">Engage with readers through live comments powered by Socket.io</p>
+      </div>
+
+      <div class="bg-white p-6 rounded-xl shadow-lg">
+        <div class="text-purple-600 text-4xl mb-4"></div>
+        <h3 class="text-xl font-bold mb-2">Role-based Access</h3>
+        <p class="text-gray-600">Admin, Editor, Writer, and Reader roles with permissions</p>
+      </div>
+    </div>
+
+    <div class="text-center mt-12" *ngIf="!(authService.currentUser$ | async)">
+      <a routerLink="/register" class="inline-block px-8 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg text-lg font-semibold hover:from-purple-700 hover:to-indigo-700 transition">
+        Get Started
+      </a>
+    </div>
+  </div>
+</div>
