@@ -1,0 +1,42 @@
+[
+  {
+    "_id": "690cc892e5c3a47bf888423d",
+    "article": "690cc892e5c3a47bf8884238",
+    "author": "690cc892e5c3a47bf8884235",
+    "content": "Great article! Very helpful for beginners.",
+    "createdAt": "2024-02-02T00:00:00.000Z",
+    "updatedAt": "2024-02-02T00:00:00.000Z"
+  },
+  {
+    "_id": "690cc892e5c3a47bf888423e",
+    "article": "690cc892e5c3a47bf8884238",
+    "author": "690cc892e5c3a47bf8884234",
+    "content": "Thanks for the comprehensive guide. Looking forward to more tutorials!",
+    "createdAt": "2024-02-03T00:00:00.000Z",
+    "updatedAt": "2024-02-03T00:00:00.000Z"
+  },
+  {
+    "_id": "690cc892e5c3a47bf888423f",
+    "article": "690cc892e5c3a47bf8884239",
+    "author": "690cc892e5c3a47bf8884236",
+    "content": "Socket.io is amazing! Used it in my recent project.",
+    "createdAt": "2024-02-06T00:00:00.000Z",
+    "updatedAt": "2024-02-06T00:00:00.000Z"
+  },
+  {
+    "_id": "690cc892e5c3a47bf8884240",
+    "article": "690cc892e5c3a47bf888423a",
+    "author": "690cc892e5c3a47bf8884235",
+    "content": "Can you provide more examples of permission checks?",
+    "createdAt": "2024-02-11T00:00:00.000Z",
+    "updatedAt": "2024-02-11T00:00:00.000Z"
+  },
+  {
+    "_id": "690cc892e5c3a47bf8884241",
+    "article": "690cc892e5c3a47bf888423b",
+    "author": "690cc892e5c3a47bf8884237",
+    "content": "Tailwind CSS has changed the way I write CSS. Great combination with Angular!",
+    "createdAt": "2024-02-16T00:00:00.000Z",
+    "updatedAt": "2024-02-16T00:00:00.000Z"
+  }
+]

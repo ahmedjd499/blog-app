@@ -1,0 +1,56 @@
+[
+  {
+    "_id": "690cc892e5c3a47bf8884232",
+    "username": "admin",
+    "email": "admin@test.com",
+    "password": "$2b$10$WdcnJ80JFIzxp0u0szd9OeV0EYyefP.se94whkaXH2l6G3O6iq1ey",
+    "role": "admin",
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "_id": "690cc892e5c3a47bf8884233",
+    "username": "editor",
+    "email": "editor@test.com",
+    "password": "$2b$10$WdcnJ80JFIzxp0u0szd9OeV0EYyefP.se94whkaXH2l6G3O6iq1ey",
+    "role": "editor",
+    "createdAt": "2024-01-02T00:00:00.000Z",
+    "updatedAt": "2024-01-02T00:00:00.000Z"
+  },
+  {
+    "_id": "690cc892e5c3a47bf8884234",
+    "username": "writer",
+    "email": "writer@test.com",
+    "password": "$2b$10$WdcnJ80JFIzxp0u0szd9OeV0EYyefP.se94whkaXH2l6G3O6iq1ey",
+    "role": "writer",
+    "createdAt": "2024-01-03T00:00:00.000Z",
+    "updatedAt": "2024-01-03T00:00:00.000Z"
+  },
+  {
+    "_id": "690cc892e5c3a47bf8884235",
+    "username": "reader",
+    "email": "reader@test.com",
+    "password": "$2b$10$WdcnJ80JFIzxp0u0szd9OeV0EYyefP.se94whkaXH2l6G3O6iq1ey",
+    "role": "reader",
+    "createdAt": "2024-01-04T00:00:00.000Z",
+    "updatedAt": "2024-01-04T00:00:00.000Z"
+  },
+  {
+    "_id": "690cc892e5c3a47bf8884236",
+    "username": "john_writer",
+    "email": "john@example.com",
+    "password": "$2b$10$WdcnJ80JFIzxp0u0szd9OeV0EYyefP.se94whkaXH2l6G3O6iq1ey",
+    "role": "writer",
+    "createdAt": "2024-01-05T00:00:00.000Z",
+    "updatedAt": "2024-01-05T00:00:00.000Z"
+  },
+  {
+    "_id": "690cc892e5c3a47bf8884237",
+    "username": "sarah_editor",
+    "email": "sarah@example.com",
+    "password": "$2b$10$WdcnJ80JFIzxp0u0szd9OeV0EYyefP.se94whkaXH2l6G3O6iq1ey",
+    "role": "editor",
+    "createdAt": "2024-01-06T00:00:00.000Z",
+    "updatedAt": "2024-01-06T00:00:00.000Z"
+  }
+]

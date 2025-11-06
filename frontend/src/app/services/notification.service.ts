@@ -101,8 +101,6 @@ export class NotificationService {
     // Listen for comment notifications when user is not in the article room
     this.socketService.onCommentNotification().subscribe({
       next: (data: any) => {
-        console.log('📬 Comment notification received:', data);
-        console.log('Active article rooms:', Array.from(this.activeArticleRooms));
         
         // Check if user is currently viewing the article
         const isViewingArticle = this.activeArticleRooms.has(data.article._id);
@@ -132,9 +130,7 @@ export class NotificationService {
     // Listen for reply notifications
     this.socketService.onReplyNotification().subscribe({
       next: (data: any) => {
-        console.log('📬 Reply notification received:', data);
-        console.log('Active article rooms:', Array.from(this.activeArticleRooms));
-        
+      
         const isViewingArticle = this.activeArticleRooms.has(data.article._id);
         
         // Fetch notifications from backend to get the saved notification with proper ID
@@ -197,12 +193,10 @@ export class NotificationService {
   // Track which article room the user is currently viewing
   setActiveArticleRoom(articleId: string): void {
     this.activeArticleRooms.add(articleId);
-    console.log('Active article rooms:', Array.from(this.activeArticleRooms));
   }
 
   removeActiveArticleRoom(articleId: string): void {
     this.activeArticleRooms.delete(articleId);
-    console.log('Active article rooms:', Array.from(this.activeArticleRooms));
   }
 
   clearActiveRooms(): void {

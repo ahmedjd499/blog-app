@@ -74,6 +74,7 @@ export class CommentListComponent {
     
     const currentUser = this.authService.currentUserValue;
     if (!currentUser) return false;
+    console.log(currentUser._id === comment.author._id);
     
     return currentUser.role === UserRole.ADMIN || 
            currentUser.role === UserRole.EDITOR ||

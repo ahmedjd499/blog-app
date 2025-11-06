@@ -1,0 +1,97 @@
+[
+  {
+    "_id": "690cc892e5c3a47bf8884238",
+    "title": "Getting Started with MEAN Stack Development",
+    "slug": "getting-started-with-mean-stack-development",
+    "excerpt": "Learn the fundamentals of building full-stack applications with MongoDB, Express, Angular, and Node.js.",
+    "content": "<h2>Introduction to MEAN Stack</h2><p>The MEAN stack is a powerful combination of technologies for building modern web applications. It consists of MongoDB (database), Express.js (backend framework), Angular (frontend framework), and Node.js (runtime environment).</p><h3>Why Choose MEAN Stack?</h3><p>The MEAN stack offers several advantages including JavaScript throughout the stack, scalability, and a rich ecosystem of libraries and tools.</p>",
+    "author": "690cc892e5c3a47bf8884232",
+    "published": true,
+    "views": 1250,
+    "likes": 89,
+    "tags": [
+      "MEAN",
+      "JavaScript",
+      "Tutorial",
+      "Web Development"
+    ],
+    "createdAt": "2024-02-01T00:00:00.000Z",
+    "updatedAt": "2024-02-01T00:00:00.000Z"
+  },
+  {
+    "_id": "690cc892e5c3a47bf8884239",
+    "title": "Real-Time Features with Socket.io",
+    "slug": "real-time-features-with-socketio",
+    "excerpt": "Implementing real-time communication in your web applications using Socket.io and Node.js.",
+    "content": "<h2>Understanding Socket.io</h2><p>Socket.io enables real-time, bidirectional communication between web clients and servers. It makes building chat applications, live notifications, and collaborative tools much easier.</p><h3>Key Features</h3><ul><li>Automatic reconnection</li><li>Binary support</li><li>Room and namespace support</li><li>Fallback to HTTP long-polling</li></ul>",
+    "author": "690cc892e5c3a47bf8884234",
+    "published": true,
+    "views": 980,
+    "likes": 67,
+    "tags": [
+      "Socket.io",
+      "Real-time",
+      "Node.js",
+      "WebSocket"
+    ],
+    "createdAt": "2024-02-05T00:00:00.000Z",
+    "updatedAt": "2024-02-05T00:00:00.000Z"
+  },
+  {
+    "_id": "690cc892e5c3a47bf888423a",
+    "title": "Role-Based Access Control in Express.js",
+    "slug": "role-based-access-control-in-expressjs",
+    "excerpt": "Implementing secure role-based permissions and authentication in your Node.js applications.",
+    "content": "<h2>Understanding RBAC</h2><p>Role-Based Access Control (RBAC) is a method of regulating access to resources based on user roles. In a typical application, you might have roles like Admin, Editor, Writer, and Reader, each with different permissions.</p><h3>Implementation Strategy</h3><p>We use middleware functions to check user roles before allowing access to specific routes or actions. This ensures security and proper authorization throughout the application.</p>",
+    "author": "690cc892e5c3a47bf8884233",
+    "published": true,
+    "views": 756,
+    "likes": 52,
+    "tags": [
+      "Security",
+      "Express.js",
+      "Authentication",
+      "Authorization"
+    ],
+    "createdAt": "2024-02-10T00:00:00.000Z",
+    "updatedAt": "2024-02-10T00:00:00.000Z"
+  },
+  {
+    "_id": "690cc892e5c3a47bf888423b",
+    "title": "Building Responsive UIs with Angular and Tailwind CSS",
+    "slug": "building-responsive-uis-with-angular-tailwind",
+    "excerpt": "Create beautiful, responsive user interfaces using Angular components and Tailwind CSS utility classes.",
+    "content": "<h2>Why Tailwind CSS?</h2><p>Tailwind CSS is a utility-first CSS framework that provides low-level utility classes to build custom designs. Unlike traditional CSS frameworks, Tailwind doesn't impose design decisions on you.</p><h3>Integration with Angular</h3><p>Integrating Tailwind CSS with Angular is straightforward. We'll cover installation, configuration, and best practices for using utility classes in Angular templates.</p>",
+    "author": "690cc892e5c3a47bf8884236",
+    "published": true,
+    "views": 1420,
+    "likes": 103,
+    "tags": [
+      "Angular",
+      "Tailwind CSS",
+      "UI/UX",
+      "Frontend"
+    ],
+    "createdAt": "2024-02-15T00:00:00.000Z",
+    "updatedAt": "2024-02-15T00:00:00.000Z"
+  },
+  {
+    "_id": "690cc892e5c3a47bf888423c",
+    "title": "MongoDB Schema Design Best Practices",
+    "slug": "mongodb-schema-design-best-practices",
+    "excerpt": "Learn how to design efficient and scalable MongoDB schemas for your applications.",
+    "content": "<h2>Schema Design Principles</h2><p>MongoDB is a NoSQL database that offers flexible schema design. However, good schema design is crucial for performance and scalability.</p><h3>Key Considerations</h3><ul><li>Embed vs Reference</li><li>Indexing strategy</li><li>Data duplication</li><li>Query patterns</li></ul><p>Understanding when to embed documents and when to use references is fundamental to good MongoDB schema design.</p>",
+    "author": "690cc892e5c3a47bf8884237",
+    "published": true,
+    "views": 890,
+    "likes": 71,
+    "tags": [
+      "MongoDB",
+      "Database",
+      "Schema Design",
+      "NoSQL"
+    ],
+    "createdAt": "2024-02-20T00:00:00.000Z",
+    "updatedAt": "2024-02-20T00:00:00.000Z"
+  }
+]
