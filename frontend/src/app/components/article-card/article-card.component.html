@@ -1,0 +1,53 @@
+﻿<div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+  <div class="relative h-48 bg-gray-200">
+    <img 
+      *ngIf="article.image" 
+      [src]="getImageUrl(article.image)" 
+      [alt]="article.title"
+      class="w-full h-full object-cover"
+    />
+    <div *ngIf="!article.image" class="flex items-center justify-center h-full text-gray-400">
+      <span class="text-4xl"></span>
+    </div>
+  </div>
+  
+  <div class="p-6">
+    <div class="flex flex-wrap gap-2 mb-3">
+      <span 
+        *ngFor="let tag of article.tags?.slice(0, 3)" 
+        class="px-3 py-1 bg-purple-100 text-purple-700 text-xs rounded-full"
+      >
+        {{ tag }}
+      </span>
+    </div>
+    
+    <h3 class="text-xl font-bold text-gray-900 mb-2 line-clamp-2">
+      {{ article.title }}
+    </h3>
+    
+    <p class="text-gray-600 mb-4 line-clamp-3">
+      {{ getExcerpt(article.content) }}
+    </p>
+    
+    <div class="flex items-center justify-between">
+      <div class="flex items-center space-x-2">
+        <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
+          <span class="text-purple-600 text-sm font-semibold">
+            {{ article.author?.username ? article.author.username.charAt(0).toUpperCase() : '?' }}
+          </span>
+        </div>
+        <div>
+          <p class="text-sm font-medium text-gray-900">{{ article.author?.username || 'Anonymous' }}</p>
+          <p class="text-xs text-gray-500">{{ article.createdAt | date: 'MMM d, y' }}</p>
+        </div>
+      </div>
+      
+      <a 
+        [routerLink]="['/articles', article._id]"
+        class="px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-medium hover:bg-purple-700 transition"
+      >
+        Read More
+      </a>
+    </div>
+  </div>
+</div>

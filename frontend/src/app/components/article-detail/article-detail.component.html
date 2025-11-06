@@ -1,0 +1,118 @@
+﻿<div class="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100 py-12">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <!-- Loading -->
+    <div *ngIf="loading" class="flex justify-center items-center py-20">
+      <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-purple-600"></div>
+    </div>
+
+    <!-- Error -->
+    <div *ngIf="error" class="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-lg mb-8">
+      {{ error }}
+    </div>
+
+    <!-- Article Content -->
+    <div *ngIf="!loading && article" class="bg-white rounded-xl shadow-lg overflow-hidden mb-8">
+      
+      <!-- Article Image -->
+      <div *ngIf="article.image" class="relative h-96 bg-gray-200">
+        <img 
+          [src]="getImageUrl(article.image)" 
+          [alt]="article.title"
+          class="w-full h-full object-cover"
+        />
+      </div>
+
+      <!-- Article Header -->
+      <div class="p-8">
+        <div class="flex flex-wrap gap-2 mb-4">
+          <span 
+            *ngFor="let tag of article.tags" 
+            class="px-3 py-1 bg-purple-100 text-purple-700 text-sm rounded-full"
+          >
+            {{ tag }}
+          </span>
+        </div>
+
+        <h1 class="text-4xl font-extrabold text-gray-900 mb-4">{{ article.title }}</h1>
+
+        <div class="flex items-center justify-between mb-6 pb-6 border-b border-gray-200">
+          <div class="flex items-center space-x-3">
+            <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+              <span class="text-purple-600 text-lg font-semibold">
+                {{ article.author?.username ? article.author.username.charAt(0).toUpperCase() : '?' }}
+              </span>
+            </div>
+            <div>
+              <p class="font-semibold text-gray-900">{{ article.author?.username || 'Anonymous' }}</p>
+              <p class="text-sm text-gray-500">{{ article.createdAt | date: 'MMMM d, y \'at\' h:mm a' }}</p>
+            </div>
+          </div>
+
+          <div *ngIf="canEditArticle()" class="flex gap-2">
+            <a 
+              [routerLink]="['/articles/edit', article._id]"
+              class="px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-medium hover:bg-purple-700 transition"
+            >
+              Edit
+            </a>
+            <button 
+              (click)="deleteArticle()"
+              class="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+
+        <!-- Article Content -->
+        <div class="prose max-w-none text-gray-700 leading-relaxed whitespace-pre-wrap">
+          {{ article.content }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Comments Section -->
+    <div *ngIf="!loading && article" class="bg-white rounded-xl shadow-lg p-8">
+      <h2 class="text-2xl font-bold text-gray-900 mb-6">
+        Comments ({{ comments.length }})
+      </h2>
+
+      <!-- Add Comment Form -->
+      <div *ngIf="authService.isLoggedIn()" class="mb-8">
+        <textarea
+          [(ngModel)]="newComment"
+          placeholder="Share your thoughts..."
+          rows="4"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+        ></textarea>
+        <div class="flex justify-end mt-3">
+          <button
+            (click)="submitComment()"
+            [disabled]="!newComment.trim() || submittingComment"
+            class="px-6 py-2 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {{ submittingComment ? 'Posting...' : 'Post Comment' }}
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="!authService.isLoggedIn()" class="mb-8 p-4 bg-gray-50 rounded-lg text-center">
+        <p class="text-gray-600">
+          <a routerLink="/login" class="text-purple-600 hover:text-purple-800 font-medium">Sign in</a> 
+          to join the conversation
+        </p>
+      </div>
+
+      <!-- Comments List -->
+      <app-comment-list [comments]="comments"></app-comment-list>
+
+      <!-- No Comments -->
+      <div *ngIf="comments.length === 0" class="text-center py-8">
+        <div class="text-4xl mb-3"></div>
+        <p class="text-gray-600">No comments yet. Be the first to comment!</p>
+      </div>
+    </div>
+
+  </div>
+</div>

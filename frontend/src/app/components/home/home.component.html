@@ -25,10 +25,15 @@
       </div>
     </div>
 
-    <div class="text-center mt-12" *ngIf="!(authService.currentUser$ | async)">
-      <a routerLink="/register" class="inline-block px-8 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg text-lg font-semibold hover:from-purple-700 hover:to-indigo-700 transition">
-        Get Started
-      </a>
+    <div class="text-center mt-12">
+      <div class="flex justify-center gap-4">
+        <a routerLink="/articles" class="inline-block px-8 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg text-lg font-semibold hover:from-purple-700 hover:to-indigo-700 transition">
+          Browse Articles
+        </a>
+        <a *ngIf="!(authService.currentUser$ | async)" routerLink="/register" class="inline-block px-8 py-4 bg-white text-purple-600 border-2 border-purple-600 rounded-lg text-lg font-semibold hover:bg-purple-50 transition">
+          Get Started
+        </a>
+      </div>
     </div>
   </div>
 </div>

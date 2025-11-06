@@ -1,0 +1,139 @@
+﻿<div class="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100 py-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-4xl font-extrabold text-gray-900 mb-4">All Articles</h1>
+      <div class="flex justify-between items-center">
+        <p class="text-lg text-gray-600">Discover and explore our latest articles</p>
+        <a 
+          *ngIf="authService.isLoggedIn()" 
+          routerLink="/articles/create"
+          class="px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition"
+        >
+          + Create Article
+        </a>
+      </div>
+    </div>
+
+    <!-- Search and Filter -->
+    <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="md:col-span-2">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Search Articles</label>
+          <input 
+            type="text"
+            [value]="searchTerm"
+            (input)="onSearchChange($any($event.target).value)"
+            placeholder="Search by title or content..."
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+          />
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Filter by Tag</label>
+          <select 
+            [(ngModel)]="selectedTag"
+            (change)="onTagFilter(selectedTag)"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+          >
+            <option value="">All Tags</option>
+            <option *ngFor="let tag of availableTags" [value]="tag">{{ tag }}</option>
+          </select>
+        </div>
+      </div>
+      
+      <div *ngIf="searchTerm || selectedTag" class="mt-4 flex items-center gap-2">
+        <span class="text-sm text-gray-600">Active filters:</span>
+        <span *ngIf="searchTerm" class="px-3 py-1 bg-purple-100 text-purple-700 text-sm rounded-full">
+          Search: {{ searchTerm }}
+        </span>
+        <span *ngIf="selectedTag" class="px-3 py-1 bg-purple-100 text-purple-700 text-sm rounded-full">
+          Tag: {{ selectedTag }}
+        </span>
+        <button 
+          (click)="clearFilters()"
+          class="text-sm text-purple-600 hover:text-purple-800 font-medium"
+        >
+          Clear all
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="flex justify-center items-center py-20">
+      <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-purple-600"></div>
+    </div>
+
+    <!-- Error -->
+    <div *ngIf="error" class="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-lg mb-8">
+      {{ error }}
+    </div>
+
+    <!-- Articles Grid -->
+    <div *ngIf="!loading && articles.length > 0" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
+      <app-article-card 
+        *ngFor="let article of articles" 
+        [article]="article"
+      ></app-article-card>
+    </div>
+
+    <!-- No Results -->
+    <div *ngIf="!loading && articles.length === 0" class="text-center py-20">
+      <div class="text-6xl mb-4"></div>
+      <h3 class="text-2xl font-bold text-gray-900 mb-2">No articles found</h3>
+      <p class="text-gray-600">Try adjusting your search or filters</p>
+    </div>
+
+    <!-- Pagination -->
+    <div *ngIf="!loading && totalPages > 1" class="flex justify-center items-center space-x-2">
+      <button 
+        (click)="goToPage(currentPage - 1)"
+        [disabled]="currentPage === 1"
+        class="px-4 py-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+      >
+        Previous
+      </button>
+      
+      <button 
+        *ngIf="pages[0] > 1"
+        (click)="goToPage(1)"
+        class="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50"
+      >
+        1
+      </button>
+      
+      <span *ngIf="pages[0] > 2" class="px-2">...</span>
+      
+      <button 
+        *ngFor="let page of pages"
+        (click)="goToPage(page)"
+        [class.bg-purple-600]="page === currentPage"
+        [class.text-white]="page === currentPage"
+        [class.border-purple-600]="page === currentPage"
+        class="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50"
+      >
+        {{ page }}
+      </button>
+      
+      <span *ngIf="pages[pages.length - 1] < totalPages - 1" class="px-2">...</span>
+      
+      <button 
+        *ngIf="pages[pages.length - 1] < totalPages"
+        (click)="goToPage(totalPages)"
+        class="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50"
+      >
+        {{ totalPages }}
+      </button>
+      
+      <button 
+        (click)="goToPage(currentPage + 1)"
+        [disabled]="currentPage === totalPages"
+        class="px-4 py-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+      >
+        Next
+      </button>
+    </div>
+
+  </div>
+</div>

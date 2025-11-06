@@ -27,7 +27,7 @@ export class BaseService {
     return this.http.delete<T>(`${this.apiUrl}${endpoint}`);
   }
 
-  protected getImageUrl(imagePath: string): string {
+  public getImageUrl(imagePath: string): string {
     return `${environment.uploadsUrl}/${imagePath}`;
   }
 }
