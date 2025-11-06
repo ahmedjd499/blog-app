@@ -20,7 +20,7 @@ const modelMap = {
 // Connect to MongoDB
 const connectDB = async () => {
   try {
-    const mongoUri = process.env.MONGODB_TEST_URI || 'mongodb://localhost:27017/blog-platform';
+    const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/blog-platform';
     await mongoose.connect(mongoUri);
     console.log('✅ MongoDB connected successfully');
   } catch (error) {

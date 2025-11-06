@@ -27,7 +27,10 @@ export class BaseService {
     return this.http.delete<T>(`${this.apiUrl}${endpoint}`);
   }
 
-  public getImageUrl(imagePath: string): string {
+  public getImageUrl(imagePath: string | undefined | null): string {
+    if (!imagePath)
+      return '/assets/placeholder.jpg'
+
     return `${environment.uploadsUrl}/${imagePath}`;
   }
 }

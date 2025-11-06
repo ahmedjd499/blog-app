@@ -16,7 +16,7 @@
       
       <!-- Article Image -->
       <div *ngIf="article.image" class="relative h-96 bg-gray-200">
-        <img 
+        <img onerror="this.src='/assets/placeholder.jpg'"  
           [src]="getImageUrl(article.image)" 
           [alt]="article.title"
           class="w-full h-full object-cover"

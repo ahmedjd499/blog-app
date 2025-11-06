@@ -65,7 +65,7 @@
         
         <!-- Current or Preview Image -->
         <div *ngIf="imagePreview || currentImageUrl" class="mb-4 relative">
-          <img 
+          <img onerror="this.src='/assets/placeholder.jpg'"  
             [src]="imagePreview || currentImageUrl" 
             alt="Preview"
             class="w-full h-64 object-cover rounded-lg"

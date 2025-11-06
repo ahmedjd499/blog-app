@@ -12,7 +12,7 @@ export class ArticleCardComponent {
 
   constructor(private baseService: BaseService) {}
 
-  getImageUrl(imagePath: string): string {
+  getImageUrl(imagePath: string | undefined | null): string {
     return this.baseService.getImageUrl(imagePath);
   }
 

@@ -214,7 +214,7 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
            currentUser._id === this.article.author._id;
   }
 
-  getImageUrl(imagePath: string): string {
+  getImageUrl(imagePath: string | undefined | null): string {
     return this.baseService.getImageUrl(imagePath);
   }
 }
