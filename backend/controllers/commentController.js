@@ -67,6 +67,19 @@ exports.createComment = async (req, res) => {
       if (parentComment && parentComment.author._id.toString() !== req.user.userId) {
         const targetUserId = parentComment.author._id;
         console.log(`📬 Emitting replyNotification to user_${targetUserId}`);
+        
+        // Save notification to database
+        const { createNotification } = require('./notificationController');
+        await createNotification({
+          recipient: targetUserId,
+          type: 'reply',
+          title: 'New Reply',
+          message: `${comment.author.username} replied to your comment`,
+          article: article._id,
+          articleTitle: article.title,
+          comment: comment._id
+        });
+        
         req.io.to(`user_${targetUserId}`).emit('replyNotification', {
           message: `${comment.author.username} replied to your comment`,
           reply: comment,
@@ -79,6 +92,19 @@ exports.createComment = async (req, res) => {
       if (!parentCommentId && article.author.toString() !== req.user.userId) {
         const targetUserId = article.author;
         console.log(`📬 Emitting commentNotification to user_${targetUserId}`);
+        
+        // Save notification to database
+        const { createNotification } = require('./notificationController');
+        await createNotification({
+          recipient: targetUserId,
+          type: 'comment',
+          title: 'New Comment',
+          message: `${comment.author.username} commented on your article: ${article.title}`,
+          article: article._id,
+          articleTitle: article.title,
+          comment: comment._id
+        });
+        
         req.io.to(`user_${targetUserId}`).emit('commentNotification', {
           message: `${comment.author.username} commented on your article: ${article.title}`,
           comment,

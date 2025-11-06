@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 import { SocketService } from './socket.service';
 import { AuthService } from './auth.service';
+import { environment } from '../../environments/environment';
 
 export interface InAppNotification {
   id: string;
@@ -27,8 +29,10 @@ export class NotificationService {
   public notifications$ = this.notificationsSubject.asObservable();
   private unreadCountSubject = new BehaviorSubject<number>(0);
   public unreadCount$ = this.unreadCountSubject.asObservable();
+  private apiUrl = environment.apiUrl + '/notifications';
 
   constructor(
+    private http: HttpClient,
     private socketService: SocketService,
     private authService: AuthService
   ) {
@@ -37,10 +41,19 @@ export class NotificationService {
     // Wait for auth state and then setup listeners
     this.authService.currentUser$.subscribe(user => {
       if (user) {
-        // User is logged in, wait a bit for socket to connect
-        setTimeout(() => {
-          this.setupNotificationListeners();
-        }, 1000);
+        // User is logged in, fetch old notifications and setup listeners
+        // Use longer delay and Promise.resolve to avoid ExpressionChangedAfterItHasBeenCheckedError
+        Promise.resolve().then(() => {
+          setTimeout(() => {
+            this.fetchNotifications();
+            this.setupNotificationListeners();
+          }, 1500);
+        });
+      } else {
+        // User logged out, clear notifications
+        Promise.resolve().then(() => {
+          this.clearAllNotifications();
+        });
       }
     });
   }
@@ -94,18 +107,9 @@ export class NotificationService {
         // Check if user is currently viewing the article
         const isViewingArticle = this.activeArticleRooms.has(data.article._id);
         
-        // Add to in-app notifications
-        this.addInAppNotification({
-          id: `comment-${data.comment._id}`,
-          type: 'comment',
-          title: 'New Comment',
-          message: data.message,
-          articleId: data.article._id,
-          articleTitle: data.article.title,
-          timestamp: new Date(),
-          read: false,
-          data: data
-        });
+        // Fetch notifications from backend to get the saved notification with proper ID
+        // This will update our local list with the persisted notification
+        setTimeout(() => this.fetchNotifications(), 500);
         
         if (!isViewingArticle) {
           this.showNotification(
@@ -133,18 +137,9 @@ export class NotificationService {
         
         const isViewingArticle = this.activeArticleRooms.has(data.article._id);
         
-        // Add to in-app notifications
-        this.addInAppNotification({
-          id: `reply-${data.reply._id}`,
-          type: 'reply',
-          title: 'New Reply',
-          message: data.message,
-          articleId: data.article._id,
-          articleTitle: data.article.title,
-          timestamp: new Date(),
-          read: false,
-          data: data
-        });
+        // Fetch notifications from backend to get the saved notification with proper ID
+        // This will update our local list with the persisted notification
+        setTimeout(() => this.fetchNotifications(), 500);
         
         if (!isViewingArticle) {
           this.showNotification(
@@ -223,8 +218,11 @@ export class NotificationService {
   }
 
   private addInAppNotification(notification: InAppNotification): void {
-    // Check if notification already exists
-    const exists = this.inAppNotifications.some(n => n.id === notification.id);
+    // Check if notification already exists (check by article and comment combo to avoid duplicates)
+    const exists = this.inAppNotifications.some(n => 
+      n.articleId === notification.articleId && 
+      n.message === notification.message
+    );
     if (!exists) {
       this.inAppNotifications.unshift(notification);
       // Keep only last 50 notifications
@@ -233,7 +231,20 @@ export class NotificationService {
       }
       this.notificationsSubject.next([...this.inAppNotifications]);
       this.updateUnreadCount();
+      
+      // Save to backend for persistence
+      this.saveNotificationToBackend(notification);
     }
+  }
+
+  private saveNotificationToBackend(notification: InAppNotification): void {
+    // Don't save if it came from backend (it already has a backend ID)
+    if (notification.data?._id) {
+      return;
+    }
+    
+    // For new notifications from Socket.io, they'll be saved by the backend automatically
+    // We don't need to manually save them here
   }
 
   getNotifications(): InAppNotification[] {
@@ -253,18 +264,69 @@ export class NotificationService {
     this.inAppNotifications.forEach(n => n.read = true);
     this.notificationsSubject.next([...this.inAppNotifications]);
     this.updateUnreadCount();
+    
+    // Sync with backend
+    this.http.put(`${this.apiUrl}/read-all`, {}).subscribe({
+      next: () => console.log('✅ All notifications marked as read on server'),
+      error: (err) => console.error('❌ Error marking all as read:', err)
+    });
   }
 
   clearNotification(notificationId: string): void {
     this.inAppNotifications = this.inAppNotifications.filter(n => n.id !== notificationId);
     this.notificationsSubject.next([...this.inAppNotifications]);
     this.updateUnreadCount();
+    
+    // Sync with backend
+    this.http.delete(`${this.apiUrl}/${notificationId}`).subscribe({
+      next: () => {},
+      error: (err) => console.error('❌ Error deleting notification:', err)
+    });
   }
 
   clearAllNotifications(): void {
     this.inAppNotifications = [];
     this.notificationsSubject.next([]);
     this.updateUnreadCount();
+    
+    // Sync with backend only if user is logged in
+    if (this.authService.isLoggedIn()) {
+      this.http.delete(`${this.apiUrl}`).subscribe({
+        next: () => {},
+        error: (err) => console.error('❌ Error deleting all notifications:', err)
+      });
+    }
+  }
+
+  fetchNotifications(): void {
+    if (!this.authService.isLoggedIn()) {
+      return;
+    }
+    
+    this.http.get<any>(`${this.apiUrl}`).subscribe({
+      next: (response) => {
+        
+        // Convert backend notifications to InAppNotification format
+        const notifications: InAppNotification[] = response.data.notifications.map((n: any) => ({
+          id: n._id, // Use MongoDB _id directly
+          type: n.type,
+          title: n.title,
+          message: n.message,
+          articleId: n.article,
+          articleTitle: n.articleTitle,
+          timestamp: new Date(n.createdAt),
+          read: n.read,
+          data: n
+        }));
+        
+        this.inAppNotifications = notifications;
+        this.notificationsSubject.next([...this.inAppNotifications]);
+        this.updateUnreadCount();
+      },
+      error: (err) => {
+        console.error('❌ Error fetching notifications:', err);
+      }
+    });
   }
 
   private updateUnreadCount(): void {
