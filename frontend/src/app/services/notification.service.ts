@@ -331,7 +331,10 @@ export class NotificationService {
 
   private updateUnreadCount(): void {
     const unreadCount = this.inAppNotifications.filter(n => !n.read).length;
-    this.unreadCountSubject.next(unreadCount);
+    // Use Promise.resolve to defer the update and avoid ExpressionChangedAfterItHasBeenCheckedError
+    Promise.resolve().then(() => {
+      this.unreadCountSubject.next(unreadCount);
+    });
   }
 
   getUnreadCount(): number {
