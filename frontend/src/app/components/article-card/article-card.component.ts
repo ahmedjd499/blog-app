@@ -16,8 +16,5 @@ export class ArticleCardComponent {
     return this.baseService.getImageUrl(imagePath);
   }
 
-  getExcerpt(content: string, length: number = 150): string {
-    if (!content) return '';
-    return content.length > length ? content.substring(0, length) + '...' : content;
-  }
+
 }
