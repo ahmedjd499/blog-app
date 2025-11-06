@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { BaseService } from './base.service';
 import { 
   Comment, 
   CommentCreateRequest, 
@@ -11,20 +12,20 @@ import {
 @Injectable({
   providedIn: 'root'
 })
-export class CommentService {
-  private apiUrl = '/api/comments';
-
-  constructor(private http: HttpClient) {}
+export class CommentService extends BaseService {
+  constructor(http: HttpClient) {
+    super(http);
+  }
 
   getCommentsByArticle(articleId: string): Observable<CommentsResponse> {
-    return this.http.get<CommentsResponse>(`${this.apiUrl}/article/${articleId}`);
+    return this.get<CommentsResponse>(`/comments/article/${articleId}`);
   }
 
   createComment(data: CommentCreateRequest): Observable<CommentResponse> {
-    return this.http.post<CommentResponse>(this.apiUrl, data);
+    return this.post<CommentResponse>('/comments', data);
   }
 
   deleteComment(id: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`);
+    return this.delete(`/comments/${id}`);
   }
 }

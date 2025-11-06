@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 import { AuthService } from './auth.service';
 import { Comment } from '../models/comment.model';
 
@@ -9,7 +10,7 @@ import { Comment } from '../models/comment.model';
 })
 export class SocketService {
   private socket: Socket | null = null;
-  private readonly socketUrl = 'http://localhost:3005';
+  private readonly socketUrl = environment.socketUrl || environment.apiUrl.replace('/api', '');
 
   constructor(private authService: AuthService) {}
 

@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
+import { BaseService } from './base.service';
+import { HttpClient } from '@angular/common/http';
 import { 
   User, 
   AuthResponse, 
@@ -12,12 +13,12 @@ import {
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthService extends BaseService {
   private currentUserSubject: BehaviorSubject<User | null>;
   public currentUser$: Observable<User | null>;
-  private apiUrl = '/api/auth';
 
-  constructor(private http: HttpClient) {
+  constructor(http: HttpClient) {
+    super(http);
     const storedUser = this.getUserFromToken();
     this.currentUserSubject = new BehaviorSubject<User | null>(storedUser);
     this.currentUser$ = this.currentUserSubject.asObservable();
@@ -28,7 +29,7 @@ export class AuthService {
   }
 
   register(data: RegisterRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/register`, data)
+    return this.post<AuthResponse>('/auth/register', data)
       .pipe(
         tap(response => {
           if (response.success && response.data) {
@@ -40,7 +41,7 @@ export class AuthService {
   }
 
   login(data: LoginRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, data)
+    return this.post<AuthResponse>('/auth/login', data)
       .pipe(
         tap(response => {
           if (response.success && response.data) {
@@ -52,7 +53,7 @@ export class AuthService {
   }
 
   logout(): Observable<any> {
-    return this.http.post(`${this.apiUrl}/logout`, {})
+    return this.post('/auth/logout', {})
       .pipe(
         tap(() => {
           this.clearTokens();
@@ -63,7 +64,7 @@ export class AuthService {
 
   refreshToken(): Observable<AuthResponse> {
     const refreshToken = this.getRefreshToken();
-    return this.http.post<AuthResponse>(`${this.apiUrl}/refresh`, { refreshToken })
+    return this.post<AuthResponse>('/auth/refresh', { refreshToken })
       .pipe(
         tap(response => {
           if (response.success && response.data) {
