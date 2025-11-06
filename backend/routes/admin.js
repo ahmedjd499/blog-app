@@ -123,6 +123,7 @@ router.use(auth);
 router.use(checkRole([UserRoles.ADMIN]));
 
 // Routes
+router.get('/stats', adminController.getStats);
 router.get('/users', adminController.getAllUsers);
 router.get('/users/:id', adminController.getUserById);
 router.put('/users/:id/role', updateRoleValidation, adminController.updateUserRole);

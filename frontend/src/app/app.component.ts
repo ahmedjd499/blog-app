@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from './services/auth.service';
 import { SocketService } from './services/socket.service';
+import { LoadingService } from './services/loading.service';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +13,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     public authService: AuthService,
-    private socketService: SocketService
+    private socketService: SocketService,
+    public loadingService: LoadingService
   ) {}
 
   ngOnInit(): void {

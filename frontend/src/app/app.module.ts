@@ -7,6 +7,9 @@ import { QuillModule } from 'ngx-quill';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { LoadingInterceptor } from './interceptors/loading.interceptor';
+import { GlobalErrorHandler } from './interceptors/error.handler';
+import { ErrorHandler } from '@angular/core';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { HomeComponent } from './components/home/home.component';
@@ -16,6 +19,8 @@ import { ArticleDetailComponent } from './components/article-detail/article-deta
 import { CommentListComponent } from './components/comment-list/comment-list.component';
 import { ArticleFormComponent } from './components/article-form/article-form.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { AdminDashboardComponent } from './components/admin-dashboard/admin-dashboard.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +33,9 @@ import { NavbarComponent } from './components/navbar/navbar.component';
     ArticleDetailComponent,
     CommentListComponent,
     ArticleFormComponent,
-    NavbarComponent
+    NavbarComponent,
+    UserProfileComponent,
+    AdminDashboardComponent
   ],
   imports: [
     BrowserModule,
@@ -43,6 +50,15 @@ import { NavbarComponent } from './components/navbar/navbar.component';
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoadingInterceptor,
+      multi: true
+    },
+    {
+      provide: ErrorHandler,
+      useClass: GlobalErrorHandler
     }
   ],
   bootstrap: [AppComponent]

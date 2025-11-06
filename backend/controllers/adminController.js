@@ -189,3 +189,34 @@ exports.deleteUser = async (req, res) => {
     });
   }
 };
+
+// @desc    Get system statistics
+// @route   GET /api/admin/stats
+// @access  Private (Admin only)
+exports.getStats = async (req, res) => {
+  try {
+    const Article = require('../models/Article');
+    const Comment = require('../models/Comment');
+
+    const totalUsers = await User.countDocuments();
+    const totalArticles = await Article.countDocuments();
+    const totalComments = await Comment.countDocuments();
+
+    res.json({
+      success: true,
+      data: {
+        totalUsers,
+        totalArticles,
+        totalComments
+      }
+    });
+
+  } catch (error) {
+    console.error('Get stats error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching statistics',
+      error: error.message
+    });
+  }
+};

@@ -1,9 +1,9 @@
 // User roles enum for consistent role management across the application
 const UserRoles = {
-  ADMIN: 'Admin',
-  EDITOR: 'Éditeur',
-  WRITER: 'Rédacteur',
-  READER: 'Lecteur'
+    ADMIN : 'admin',
+    EDITOR : 'editor',
+    WRITER : 'writer',
+    READER : 'reader'
 };
 
 // Array of all roles (useful for validation)

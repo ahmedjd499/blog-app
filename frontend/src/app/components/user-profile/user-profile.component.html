@@ -1,0 +1,93 @@
+<div class="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100 py-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <!-- Loading -->
+    <div *ngIf="loading" class="flex justify-center items-center py-20">
+      <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-purple-600"></div>
+    </div>
+
+    <!-- Error -->
+    <div *ngIf="error" class="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-lg mb-8">
+      {{ error }}
+    </div>
+
+    <!-- Profile Content -->
+    <div *ngIf="!loading && user" class="space-y-8">
+      
+      <!-- Profile Header -->
+      <div class="bg-white rounded-xl shadow-lg p-8">
+        <div class="flex items-center space-x-6">
+          <!-- Avatar -->
+          <div class="w-24 h-24 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
+            <span class="text-purple-600 text-4xl font-bold">{{ getUserInitial() }}</span>
+          </div>
+          
+          <!-- User Info -->
+          <div class="flex-1">
+            <div class="flex items-center gap-3 mb-2">
+              <h1 class="text-3xl font-bold text-gray-900">{{ user.username }}</h1>
+              <span 
+                [ngClass]="getRoleBadgeClass()"
+                class="px-3 py-1 rounded-full text-sm font-medium capitalize"
+              >
+                {{ user.role }}
+              </span>
+            </div>
+            <p class="text-gray-600">{{ user.email }}</p>
+            <p class="text-sm text-gray-500 mt-2">
+              Member since {{ user.createdAt | date: 'MMMM yyyy' }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-3 gap-6 mt-8 pt-6 border-t border-gray-200">
+          <div class="text-center">
+            <p class="text-3xl font-bold text-purple-600">{{ stats.totalArticles }}</p>
+            <p class="text-sm text-gray-600 mt-1">Articles</p>
+          </div>
+          <div class="text-center">
+            <p class="text-3xl font-bold text-purple-600">{{ stats.totalComments }}</p>
+            <p class="text-sm text-gray-600 mt-1">Comments</p>
+          </div>
+          <div class="text-center">
+            <p class="text-3xl font-bold text-purple-600">{{ stats.totalViews }}</p>
+            <p class="text-sm text-gray-600 mt-1">Views</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- User's Articles -->
+      <div class="bg-white rounded-xl shadow-lg p-8">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">
+          {{ isOwnProfile ? 'My Articles' : 'Articles by ' + user.username }}
+        </h2>
+
+        <!-- Articles Grid -->
+        <div *ngIf="articles.length > 0" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <app-article-card 
+            *ngFor="let article of articles" 
+            [article]="article"
+          ></app-article-card>
+        </div>
+
+        <!-- No Articles -->
+        <div *ngIf="articles.length === 0" class="text-center py-12">
+          <div class="text-6xl mb-4">📝</div>
+          <p class="text-gray-600">
+            {{ isOwnProfile ? 'You haven\'t written any articles yet.' : 'This user hasn\'t written any articles yet.' }}
+          </p>
+          <a 
+            *ngIf="isOwnProfile" 
+            routerLink="/articles/create"
+            class="inline-block mt-4 px-6 py-3 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition"
+          >
+            Write Your First Article
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>

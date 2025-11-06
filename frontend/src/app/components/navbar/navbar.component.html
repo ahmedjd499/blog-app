@@ -30,15 +30,20 @@
             Write Article
           </a>
           
+          <a *ngIf="user.role === 'admin'" routerLink="/admin" routerLinkActive="text-purple-600"
+             class="px-3 py-2 text-gray-700 hover:text-purple-600 font-medium transition">
+            Admin
+          </a>
+          
           <div class="flex items-center space-x-3 pl-3 border-l border-gray-300">
-            <div class="w-9 h-9 bg-purple-100 rounded-full flex items-center justify-center">
+            <a routerLink="/profile" class="w-9 h-9 bg-purple-100 rounded-full flex items-center justify-center hover:bg-purple-200 transition">
               <span class="text-purple-600 font-semibold">
                 {{ user.username.charAt(0).toUpperCase() }}
               </span>
-            </div>
+            </a>
             <div class="text-left">
-              <p class="text-sm font-semibold text-gray-900">{{ user.username }}</p>
-              <p class="text-xs text-gray-500">{{ user.role }}</p>
+              <a routerLink="/profile" class="text-sm font-semibold text-gray-900 hover:text-purple-600">{{ user.username }}</a>
+              <p class="text-xs text-gray-500 capitalize">{{ user.role }}</p>
             </div>
             <button
               (click)="logout()"
@@ -94,9 +99,17 @@
            class="block px-3 py-2 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition">
           Write Article
         </a>
+        <a *ngIf="user.role === 'admin'" routerLink="/admin" (click)="toggleMobileMenu()"
+           class="block px-3 py-2 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg font-medium transition">
+          Admin Dashboard
+        </a>
+        <a routerLink="/profile" (click)="toggleMobileMenu()"
+           class="block px-3 py-2 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg font-medium transition">
+          My Profile
+        </a>
         <div class="px-3 py-3 bg-gray-50 rounded-lg">
           <p class="text-sm font-semibold text-gray-900">{{ user.username }}</p>
-          <p class="text-xs text-gray-500">{{ user.role }}</p>
+          <p class="text-xs text-gray-500 capitalize">{{ user.role }}</p>
         </div>
         <button
           (click)="logout(); toggleMobileMenu()"

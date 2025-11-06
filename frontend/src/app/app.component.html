@@ -1,2 +1,7 @@
-﻿<app-navbar></app-navbar>
+﻿<!-- Global Loading Indicator -->
+<div *ngIf="loadingService.loading$ | async" class="fixed top-0 left-0 right-0 z-[100]">
+  <div class="h-1 bg-purple-600 animate-pulse"></div>
+</div>
+
+<app-navbar></app-navbar>
 <router-outlet></router-outlet>
