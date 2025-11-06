@@ -1,4 +1,5 @@
 const Article = require('../models/Article');
+const { UserRoles } = require('../config/roles');
 
 // Middleware to check if user can update article
 exports.canUpdateArticle = async (req, res, next) => {
@@ -16,9 +17,9 @@ exports.canUpdateArticle = async (req, res, next) => {
     const userId = req.user.userId;
     const isAuthor = article.author.toString() === userId;
 
-    // Admin and Éditeur can update any article
-    // Rédacteur can only update their own articles
-    if (userRole === 'Admin' || userRole === 'Éditeur' || (userRole === 'Rédacteur' && isAuthor)) {
+    // Admin and Editor can update any article
+    // Writer can only update their own articles
+    if (userRole === UserRoles.ADMIN || userRole === UserRoles.EDITOR || (userRole === UserRoles.WRITER && isAuthor)) {
       return next();
     }
 
@@ -28,7 +29,7 @@ exports.canUpdateArticle = async (req, res, next) => {
       details: {
         yourRole: userRole,
         isAuthor: isAuthor,
-        required: 'Admin, Éditeur, or be the article author (Rédacteur)'
+        required: `${UserRoles.ADMIN}, ${UserRoles.EDITOR}, or be the article author (${UserRoles.WRITER})`
       }
     });
 
@@ -56,7 +57,7 @@ exports.canDeleteArticle = async (req, res, next) => {
     const userRole = req.user.role;
 
     // Only Admin can delete articles
-    if (userRole === 'Admin') {
+    if (userRole === UserRoles.ADMIN) {
       return next();
     }
 
@@ -65,7 +66,7 @@ exports.canDeleteArticle = async (req, res, next) => {
       message: 'Only Admins can delete articles',
       details: {
         yourRole: userRole,
-        required: 'Admin'
+        required: UserRoles.ADMIN
       }
     });
 

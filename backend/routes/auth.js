@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { body } = require('express-validator');
 const authController = require('../controllers/authController');
+const { ALL_ROLES } = require('../config/roles');
 
 /**
  * @swagger
@@ -111,7 +112,7 @@ const registerValidation = [
     .withMessage('Password must be at least 6 characters'),
   body('role')
     .optional()
-    .isIn(['Admin', 'Éditeur', 'Rédacteur', 'Lecteur'])
+    .isIn(ALL_ROLES)
     .withMessage('Invalid role')
 ];
 

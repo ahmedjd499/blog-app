@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
+const { UserRoles } = require('../config/roles');
 
 // Generate access token
 const generateAccessToken = (userId) => {
@@ -55,7 +56,7 @@ exports.register = async (req, res) => {
       username,
       email,
       password,
-      role: role || 'Lecteur' // Default role
+      role: role || UserRoles.READER // Default role
     });
 
     // Generate tokens
