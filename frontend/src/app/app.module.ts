@@ -13,6 +13,8 @@ import { ArticleListComponent } from './components/article-list/article-list.com
 import { ArticleCardComponent } from './components/article-card/article-card.component';
 import { ArticleDetailComponent } from './components/article-detail/article-detail.component';
 import { CommentListComponent } from './components/comment-list/comment-list.component';
+import { ArticleFormComponent } from './components/article-form/article-form.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,9 @@ import { CommentListComponent } from './components/comment-list/comment-list.com
     ArticleListComponent,
     ArticleCardComponent,
     ArticleDetailComponent,
-    CommentListComponent
+    CommentListComponent,
+    ArticleFormComponent,
+    NavbarComponent
   ],
   imports: [
     BrowserModule,

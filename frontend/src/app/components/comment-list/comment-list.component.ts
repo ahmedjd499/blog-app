@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { CommentService } from '../../services/comment.service';
 import { AuthService } from '../../services/auth.service';
 import { Comment } from '../../models/comment.model';
+import { UserRole } from '../../models/user.model';
 
 @Component({
   selector: 'app-comment-list',
@@ -71,11 +72,11 @@ export class CommentListComponent {
       return false;
     }
     
-    const currentUser = this.authService.getCurrentUser();
+    const currentUser = this.authService.currentUserValue;
     if (!currentUser) return false;
     
-    return currentUser.role === 'admin' || 
-           currentUser.role === 'editor' ||
+    return currentUser.role === UserRole.ADMIN || 
+           currentUser.role === UserRole.EDITOR ||
            currentUser._id === comment.author._id;
   }
 

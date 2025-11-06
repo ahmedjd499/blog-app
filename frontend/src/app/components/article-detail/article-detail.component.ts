@@ -7,6 +7,7 @@ import { AuthService } from '../../services/auth.service';
 import { BaseService } from '../../services/base.service';
 import { Article } from '../../models/article.model';
 import { Comment } from '../../models/comment.model';
+import { UserRole } from '../../models/user.model';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -140,11 +141,11 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
       return false;
     }
     
-    const currentUser = this.authService.getCurrentUser();
+    const currentUser = this.authService.currentUserValue;
     if (!currentUser) return false;
     
-    return currentUser.role === 'admin' || 
-           currentUser.role === 'editor' ||
+    return currentUser.role === UserRole.ADMIN || 
+           currentUser.role === UserRole.EDITOR ||
            currentUser._id === this.article.author._id;
   }
 
