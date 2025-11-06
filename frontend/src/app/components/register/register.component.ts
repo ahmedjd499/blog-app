@@ -14,7 +14,6 @@ export class RegisterComponent implements OnInit {
   loading = false;
   error = '';
   success = false;
-  roles = Object.values(UserRole);
 
   constructor(
     private formBuilder: FormBuilder,
@@ -33,7 +32,6 @@ export class RegisterComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required]],
-      role: [UserRole.READER, [Validators.required]]
     }, {
       validators: this.passwordMatchValidator
     });

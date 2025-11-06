@@ -35,13 +35,11 @@ const notificationSchema = new mongoose.Schema({
   },
   read: {
     type: Boolean,
-    default: false,
-    index: true
+    default: false
   },
   createdAt: {
     type: Date,
-    default: Date.now,
-    index: true
+    default: Date.now
   }
 });
 

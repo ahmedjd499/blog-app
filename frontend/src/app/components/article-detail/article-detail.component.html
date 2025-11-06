@@ -40,11 +40,11 @@
           <div class="flex items-center space-x-3">
             <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
               <span class="text-purple-600 text-lg font-semibold">
-                {{ article.author?.username ? article.author.username.charAt(0).toUpperCase() : '?' }}
+                {{ article.author.username ? article.author.username.charAt(0).toUpperCase() : '?' }}
               </span>
             </div>
             <div>
-              <p class="font-semibold text-gray-900">{{ article.author?.username || 'Anonymous' }}</p>
+              <p class="font-semibold text-gray-900">{{ article.author.username || 'Anonymous' }}</p>
               <p class="text-sm text-gray-500">{{ article.createdAt | date: 'MMMM d, y \'at\' h:mm a' }}</p>
             </div>
           </div>

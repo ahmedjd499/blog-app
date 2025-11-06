@@ -14,7 +14,7 @@
   <div class="p-6">
     <div class="flex flex-wrap gap-2 mb-3">
       <span 
-        *ngFor="let tag of article.tags?.slice(0, 3)" 
+        *ngFor="let tag of article.tags.slice(0, 3)" 
         class="px-3 py-1 bg-purple-100 text-purple-700 text-xs rounded-full"
       >
         {{ tag }}
@@ -29,11 +29,11 @@
       <div class="flex items-center space-x-2">
         <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
           <span class="text-purple-600 text-sm font-semibold">
-            {{ article.author?.username ? article.author.username.charAt(0).toUpperCase() : '?' }}
+            {{ article.author.username ? article.author.username.charAt(0).toUpperCase() : '?' }}
           </span>
         </div>
         <div>
-          <p class="text-sm font-medium text-gray-900">{{ article.author?.username || 'Anonymous' }}</p>
+          <p class="text-sm font-medium text-gray-900">{{ article.author.username || 'Anonymous' }}</p>
           <p class="text-xs text-gray-500">{{ article.createdAt | date: 'MMM d, y' }}</p>
         </div>
       </div>
