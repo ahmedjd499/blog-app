@@ -34,6 +34,7 @@ export class AuthService extends BaseService {
         tap(response => {
           if (response.success && response.data) {
             this.setTokens(response.data.accessToken, response.data.refreshToken);
+            this.setUser(response.data.user);
             this.currentUserSubject.next(response.data.user);
           }
         })
@@ -46,6 +47,7 @@ export class AuthService extends BaseService {
         tap(response => {
           if (response.success && response.data) {
             this.setTokens(response.data.accessToken, response.data.refreshToken);
+            this.setUser(response.data.user);
             this.currentUserSubject.next(response.data.user);
           }
         })
@@ -57,6 +59,7 @@ export class AuthService extends BaseService {
       .pipe(
         tap(() => {
           this.clearTokens();
+          this.clearUser();
           this.currentUserSubject.next(null);
         })
       );
@@ -109,6 +112,14 @@ export class AuthService extends BaseService {
     localStorage.removeItem('refreshToken');
   }
 
+  private setUser(user: User): void {
+    localStorage.setItem('currentUser', JSON.stringify(user));
+  }
+
+  private clearUser(): void {
+    localStorage.removeItem('currentUser');
+  }
+
   private getUserFromToken(): User | null {
     const token = this.getAccessToken();
     if (!token) return null;
@@ -117,11 +128,19 @@ export class AuthService extends BaseService {
       const decoded: any = jwtDecode(token);
       if (decoded.exp * 1000 < Date.now()) {
         this.clearTokens();
+        this.clearUser();
         return null;
       }
-      return decoded.user || null;
+      
+      // Get user from localStorage
+      const userStr = localStorage.getItem('currentUser');
+      if (userStr) {
+        return JSON.parse(userStr);
+      }
+      return null;
     } catch {
       this.clearTokens();
+      this.clearUser();
       return null;
     }
   }

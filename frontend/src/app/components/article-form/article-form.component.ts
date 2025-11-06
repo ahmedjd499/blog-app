@@ -25,6 +25,26 @@ export class ArticleFormComponent implements OnInit {
   tagInput = '';
   tags: string[] = [];
 
+  // Quill editor configuration
+  quillModules = {
+    toolbar: [
+      ['bold', 'italic', 'underline', 'strike'],
+      ['blockquote', 'code-block'],
+      [{ 'header': 1 }, { 'header': 2 }],
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      [{ 'script': 'sub'}, { 'script': 'super' }],
+      [{ 'indent': '-1'}, { 'indent': '+1' }],
+      [{ 'direction': 'rtl' }],
+      [{ 'size': ['small', false, 'large', 'huge'] }],
+      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+      [{ 'color': [] }, { 'background': [] }],
+      [{ 'font': [] }],
+      [{ 'align': [] }],
+      ['clean'],
+      ['link', 'image', 'video']
+    ]
+  };
+
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
@@ -119,7 +139,11 @@ export class ArticleFormComponent implements OnInit {
     const formData = new FormData();
     formData.append('title', this.articleForm.value.title);
     formData.append('content', this.articleForm.value.content);
-    formData.append('tags', JSON.stringify(this.tags));
+    
+    // Send tags as comma-separated string
+    if (this.tags.length > 0) {
+      formData.append('tags', this.tags.join(','));
+    }
     
     if (this.selectedImage) {
       formData.append('image', this.selectedImage);

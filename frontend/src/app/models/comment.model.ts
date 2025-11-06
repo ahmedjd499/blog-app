@@ -24,5 +24,9 @@ export interface CommentResponse {
 
 export interface CommentsResponse {
   success: boolean;
-  data?: Comment[];
+  data?: {
+    articleId: string;
+    count: number;
+    comments: Comment[];
+  };
 }

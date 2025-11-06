@@ -16,12 +16,7 @@ export class AppComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // Connect to Socket.io if user is logged in
-    if (this.authService.isLoggedIn()) {
-      this.socketService.connect();
-    }
-
-    // Subscribe to auth changes
+    // Subscribe to auth changes and manage socket connection
     this.authService.currentUser$.subscribe(user => {
       if (user) {
         this.socketService.connect();

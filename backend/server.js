@@ -16,7 +16,8 @@ connectDB();
 // Security Middleware
 app.use(helmet({
   contentSecurityPolicy: false, // Allow Swagger UI to work
-  crossOriginEmbedderPolicy: false
+  crossOriginEmbedderPolicy: false,
+  crossOriginResourcePolicy: { policy: "cross-origin" }
 }));
 
 // Middleware
@@ -27,8 +28,12 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve static files (uploaded images)
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// Serve static files (uploaded images) with CORS headers
+app.use('/uploads', (req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', process.env.CLIENT_URL || 'http://localhost:4200');
+  res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+  next();
+}, express.static(path.join(__dirname, 'uploads')));
 
 // Swagger API Documentation
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {

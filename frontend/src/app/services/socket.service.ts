@@ -38,10 +38,10 @@ export class SocketService {
   }
 
   disconnect(): void {
-    if (this.socket) {
+    if (this.socket?.connected) {
       this.socket.disconnect();
-      this.socket = null;
     }
+    this.socket = null;
   }
 
   joinArticle(articleId: string): void {

@@ -74,8 +74,8 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
   loadComments(articleId: string): void {
     this.commentService.getCommentsByArticle(articleId).subscribe({
       next: (response) => {
-        if (response.data) {
-          this.comments = response.data;
+        if (response.data?.comments) {
+          this.comments = response.data.comments;
         }
       },
       error: (err) => {
