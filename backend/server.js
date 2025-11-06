@@ -39,13 +39,13 @@ app.get('/api/health', (req, res) => {
 
 // Import routes
 const authRoutes = require('./routes/auth');
-// const articleRoutes = require('./routes/articles');
+const articleRoutes = require('./routes/articles');
 // const commentRoutes = require('./routes/comments');
 // const adminRoutes = require('./routes/admin');
 
 // Use routes
 app.use('/api/auth', authRoutes);
-// app.use('/api/articles', articleRoutes);
+app.use('/api/articles', articleRoutes);
 // app.use('/api/comments', commentRoutes);
 // app.use('/api/admin', adminRoutes);
 
