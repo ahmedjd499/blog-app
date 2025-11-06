@@ -70,7 +70,7 @@ userSchema.methods.comparePassword = async function(candidatePassword) {
 // Method to get public profile (without sensitive data)
 userSchema.methods.getPublicProfile = function() {
   return {
-    id: this._id,
+    _id: this._id,
     username: this.username,
     email: this.email,
     role: this.role,
