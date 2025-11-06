@@ -10,18 +10,39 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
 import { AdminDashboardComponent } from './components/admin-dashboard/admin-dashboard.component';
 import { AuthGuard } from './guards/auth.guard';
 import { AdminGuard } from './guards/admin.guard';
+import { EditorGuard } from './guards/editor.guard';
+import { WriterGuard } from './guards/writer.guard';
+import { RoleGuard } from './guards/role.guard';
+import { UserRole } from './models/user.model';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'articles', component: ArticleListComponent },
-  { path: 'articles/create', component: ArticleFormComponent, canActivate: [AuthGuard] },
-  { path: 'articles/edit/:id', component: ArticleFormComponent, canActivate: [AuthGuard] },
+  // Only writers and above can create articles
+  { 
+    path: 'articles/create', 
+    component: ArticleFormComponent, 
+    canActivate: [WriterGuard] 
+  },
+  // Only writers and above can edit articles (additional permission checks in component)
+  { 
+    path: 'articles/edit/:id', 
+    component: ArticleFormComponent, 
+    canActivate: [WriterGuard] 
+  },
   { path: 'articles/:id', component: ArticleDetailComponent },
+  // Authenticated users can view their own profile
   { path: 'profile', component: UserProfileComponent, canActivate: [AuthGuard] },
+  // Anyone can view other profiles
   { path: 'profile/:id', component: UserProfileComponent },
-  { path: 'admin', component: AdminDashboardComponent, canActivate: [AuthGuard, AdminGuard] },
+  // Admin dashboard - only admins
+  { 
+    path: 'admin', 
+    component: AdminDashboardComponent, 
+    canActivate: [AdminGuard] 
+  },
   { path: '**', redirectTo: '' }
 ];
 

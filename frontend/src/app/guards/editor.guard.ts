@@ -13,7 +13,7 @@ import { UserRole } from '../models/user.model';
 @Injectable({
   providedIn: 'root'
 })
-export class AdminGuard implements CanActivate {
+export class EditorGuard implements CanActivate {
   constructor(
     private authService: AuthService,
     private router: Router
@@ -31,12 +31,14 @@ export class AdminGuard implements CanActivate {
       return false;
     }
 
-    if (currentUser.role === UserRole.ADMIN) {
+    // Check if user has editor role or higher (admin, editor)
+    const allowedRoles = [UserRole.ADMIN, UserRole.EDITOR];
+    if (allowedRoles.includes(currentUser.role)) {
       return true;
     }
 
-    // Not an admin, redirect to home
-    alert('Access denied. Admin privileges required.');
+    // Not an editor, redirect to home
+    alert('Access denied. Editor privileges required.');
     this.router.navigate(['/']);
     return false;
   }
