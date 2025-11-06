@@ -126,13 +126,55 @@ const loginValidation = [
     .withMessage('Password is required')
 ];
 
-// Routes
+// Import middleware
+const auth = require('../middleware/auth');
+
+/**
+ * @swagger
+ * /api/auth/logout:
+ *   post:
+ *     summary: Logout user
+ *     tags: [Authentication]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Logout successful
+ *       401:
+ *         description: Unauthorized
+ */
+
+/**
+ * @swagger
+ * /api/auth/me:
+ *   get:
+ *     summary: Get current user profile
+ *     tags: [Authentication]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: User profile retrieved
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   $ref: '#/components/schemas/User'
+ *       401:
+ *         description: Unauthorized
+ */
+
+// Public routes
 router.post('/register', registerValidation, authController.register);
 router.post('/login', loginValidation, authController.login);
 router.post('/refresh', authController.refreshToken);
 
-// Protected routes (will add auth middleware in Step 3)
-// router.post('/logout', authMiddleware, authController.logout);
-// router.get('/me', authMiddleware, authController.getCurrentUser);
+// Protected routes
+router.post('/logout', auth, authController.logout);
+router.get('/me', auth, authController.getCurrentUser);
 
 module.exports = router;
