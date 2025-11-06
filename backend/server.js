@@ -28,6 +28,26 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
   customSiteTitle: 'Blog Platform API Docs'
 }));
 
+// Initialize Socket.io first (before routes)
+const server = require('http').createServer(app);
+const io = require('socket.io')(server, {
+  cors: {
+    origin: process.env.CLIENT_URL || 'http://localhost:4200',
+    credentials: true,
+    methods: ['GET', 'POST']
+  }
+});
+
+// Initialize Socket.io handlers
+const { initializeSocketHandlers } = require('./sockets/commentSocket');
+initializeSocketHandlers(io);
+
+// Make io accessible to routes via middleware
+app.use((req, res, next) => {
+  req.io = io;
+  next();
+});
+
 // Routes
 app.get('/api/health', (req, res) => {
   res.json({ 
@@ -40,13 +60,13 @@ app.get('/api/health', (req, res) => {
 // Import routes
 const authRoutes = require('./routes/auth');
 const articleRoutes = require('./routes/articles');
-// const commentRoutes = require('./routes/comments');
+const commentRoutes = require('./routes/comments');
 // const adminRoutes = require('./routes/admin');
 
 // Use routes
 app.use('/api/auth', authRoutes);
 app.use('/api/articles', articleRoutes);
-// app.use('/api/comments', commentRoutes);
+app.use('/api/comments', commentRoutes);
 // app.use('/api/admin', adminRoutes);
 
 // Error handling middleware
@@ -70,18 +90,11 @@ app.use((req, res) => {
 const PORT = process.env.PORT || 3000;
 const baseUrl = process.env.URL || 'http://localhost';
 
-const server = app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
   console.log(`📡 API available at ${baseUrl}:${PORT}/api`);
   console.log(`📚 API Docs available at ${baseUrl}:${PORT}/api-docs`);
+  console.log(`🔌 Socket.io enabled for real-time comments`);
 });
 
-// Socket.io will be integrated here in Step 7
-// const io = require('socket.io')(server, {
-//   cors: {
-//     origin: process.env.CLIENT_URL,
-//     credentials: true
-//   }
-// });
-
-module.exports = { app, server };
+module.exports = { app, server, io };
