@@ -1,15 +1,23 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
 const connectDB = require('./config/db');
 const path = require('path');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./config/swagger');
+const { apiLimiter } = require('./middleware/rateLimiter');
 
 const app = express();
 
 // Connect to MongoDB
 connectDB();
+
+// Security Middleware
+app.use(helmet({
+  contentSecurityPolicy: false, // Allow Swagger UI to work
+  crossOriginEmbedderPolicy: false
+}));
 
 // Middleware
 app.use(cors({
@@ -48,6 +56,9 @@ app.use((req, res, next) => {
   next();
 });
 
+// Apply rate limiting to all API routes
+app.use('/api', apiLimiter);
+
 // Routes
 app.get('/api/health', (req, res) => {
   res.json({ 
@@ -61,31 +72,18 @@ app.get('/api/health', (req, res) => {
 const authRoutes = require('./routes/auth');
 const articleRoutes = require('./routes/articles');
 const commentRoutes = require('./routes/comments');
-// const adminRoutes = require('./routes/admin');
+const adminRoutes = require('./routes/admin');
 
 // Use routes
 app.use('/api/auth', authRoutes);
 app.use('/api/articles', articleRoutes);
 app.use('/api/comments', commentRoutes);
-// app.use('/api/admin', adminRoutes);
+app.use('/api/admin', adminRoutes);
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(err.status || 500).json({
-    success: false,
-    message: err.message || 'Server Error',
-    ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
-  });
-});
-
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({
-    success: false,
-    message: 'Route not found'
-  });
-});
+// Error Handling Middleware (must be after routes)
+const { errorHandler, notFound } = require('./middleware/errorHandler');
+app.use(notFound);
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
 const baseUrl = process.env.URL || 'http://localhost';

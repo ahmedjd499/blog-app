@@ -3,6 +3,7 @@ const router = express.Router();
 const { body } = require('express-validator');
 const authController = require('../controllers/authController');
 const { ALL_ROLES } = require('../config/roles');
+const { authLimiter } = require('../middleware/rateLimiter');
 
 /**
  * @swagger
@@ -169,10 +170,10 @@ const auth = require('../middleware/auth');
  *         description: Unauthorized
  */
 
-// Public routes
-router.post('/register', registerValidation, authController.register);
-router.post('/login', loginValidation, authController.login);
-router.post('/refresh', authController.refreshToken);
+// Public routes with rate limiting
+router.post('/register', authLimiter, registerValidation, authController.register);
+router.post('/login', authLimiter, loginValidation, authController.login);
+router.post('/refresh', authLimiter, authController.refreshToken);
 
 // Protected routes
 router.post('/logout', auth, authController.logout);

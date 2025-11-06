@@ -5,6 +5,7 @@ const articleController = require('../controllers/articleController');
 const auth = require('../middleware/auth');
 const upload = require('../middleware/upload');
 const { canUpdateArticle, canDeleteArticle } = require('../middleware/articlePermissions');
+const { uploadLimiter } = require('../middleware/rateLimiter');
 
 // Validation middleware
 const articleValidation = [
@@ -166,9 +167,9 @@ const articleValidation = [
 router.get('/', articleController.getAllArticles);
 router.get('/:id', articleController.getArticleById);
 
-// Protected routes with role-based permissions
-router.post('/', auth, upload.single('image'), articleValidation, articleController.createArticle);
-router.put('/:id', auth, canUpdateArticle, upload.single('image'), articleValidation, articleController.updateArticle);
+// Protected routes with role-based permissions and rate limiting
+router.post('/', auth, uploadLimiter, upload.single('image'), articleValidation, articleController.createArticle);
+router.put('/:id', auth, uploadLimiter, canUpdateArticle, upload.single('image'), articleValidation, articleController.updateArticle);
 router.delete('/:id', auth, canDeleteArticle, articleController.deleteArticle);
 
 module.exports = router;
