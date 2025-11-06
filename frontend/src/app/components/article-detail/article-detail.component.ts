@@ -85,15 +85,74 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
   }
 
   setupRealtimeComments(articleId: string): void {
-    this.socketService.joinArticle(articleId);
+    // Ensure socket is connected before joining
+    if (!this.socketService.isConnected()) {
+      this.socketService.connect();
+    }
+    
+    // Small delay to ensure connection is established
+    setTimeout(() => {
+      this.socketService.joinArticle(articleId);
+      console.log('Joined article room:', articleId);
+    }, 500);
     
     this.commentSubscription = this.socketService.onNewComment().subscribe({
       next: (comment: Comment) => {
-        if (comment.article === articleId) {
-          this.comments.unshift(comment);
+        console.log('New comment received:', comment);
+        // Convert article ID to string for comparison
+        const commentArticleId = typeof comment.article === 'string' 
+          ? comment.article 
+          : (comment.article as any)?._id || comment.article;
+        
+        if (commentArticleId === articleId) {
+          // Check if comment is a reply or top-level comment
+          if (comment.parentComment) {
+            // It's a reply - find parent and add to its replies array
+            this.addReplyToParent(comment);
+          } else {
+            // It's a top-level comment
+            const exists = this.comments.some(c => c._id === comment._id);
+            if (!exists) {
+              this.comments.unshift(comment);
+              console.log('Top-level comment added to list');
+            }
+          }
         }
       }
     });
+  }
+
+  private addReplyToParent(reply: Comment): void {
+    const parentId = typeof reply.parentComment === 'string' 
+      ? reply.parentComment 
+      : (reply.parentComment as any)?._id;
+    
+    // Recursively find and add reply to parent comment
+    const addToParent = (comments: Comment[]): boolean => {
+      for (const comment of comments) {
+        if (comment._id === parentId) {
+          // Found the parent - add reply if not exists
+          if (!comment.replies) {
+            comment.replies = [];
+          }
+          const exists = comment.replies.some(r => r._id === reply._id);
+          if (!exists) {
+            comment.replies.push(reply);
+            console.log('Reply added to parent comment');
+          }
+          return true;
+        }
+        // Check nested replies
+        if (comment.replies && comment.replies.length > 0) {
+          if (addToParent(comment.replies)) {
+            return true;
+          }
+        }
+      }
+      return false;
+    };
+    
+    addToParent(this.comments);
   }
 
   submitComment(): void {

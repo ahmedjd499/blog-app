@@ -83,4 +83,12 @@ export class CommentListComponent {
   getInitial(username: string): string {
     return username ? username.charAt(0).toUpperCase() : '?';
   }
+
+  getArticleId(comment: Comment): string {
+    // Handle both string and object forms of article ID
+    if (typeof comment.article === 'string') {
+      return comment.article;
+    }
+    return (comment.article as any)?._id || '';
+  }
 }

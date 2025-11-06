@@ -45,18 +45,37 @@ export class SocketService {
   }
 
   joinArticle(articleId: string): void {
-    this.socket?.emit('joinArticle', articleId);
+    if (this.socket?.connected) {
+      this.socket.emit('joinArticle', articleId);
+      console.log('Emitted joinArticle event for:', articleId);
+    } else {
+      console.warn('Socket not connected, cannot join article');
+    }
   }
 
   leaveArticle(articleId: string): void {
-    this.socket?.emit('leaveArticle', articleId);
+    if (this.socket?.connected) {
+      this.socket.emit('leaveArticle', articleId);
+      console.log('Emitted leaveArticle event for:', articleId);
+    }
   }
 
   onNewComment(): Observable<Comment> {
     return new Observable(observer => {
-      this.socket?.on('newComment', (comment: Comment) => {
+      if (!this.socket) {
+        console.error('Socket is not initialized');
+        return;
+      }
+      
+      this.socket.on('newComment', (comment: Comment) => {
+        console.log('Socket received newComment event:', comment);
         observer.next(comment);
       });
+      
+      // Return cleanup function
+      return () => {
+        this.socket?.off('newComment');
+      };
     });
   }
 

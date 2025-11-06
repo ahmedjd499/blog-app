@@ -59,6 +59,7 @@ exports.createComment = async (req, res) => {
 
     // Emit real-time event to all users viewing this article
     if (req.io) {
+      console.log(`📡 Emitting newComment to room: article_${articleId}`);
       req.io.to(`article_${articleId}`).emit('newComment', comment);
       
       // Notify article author if someone else commented
@@ -69,6 +70,8 @@ exports.createComment = async (req, res) => {
           article: { _id: article._id, title: article.title }
         });
       }
+    } else {
+      console.warn('⚠️ Socket.io instance not available on request object');
     }
 
     res.status(201).json({
