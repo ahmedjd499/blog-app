@@ -10,6 +10,15 @@ export default defineConfig({
     },
   },
 
+  reporter: "mochawesome",
+  reporterOptions: {
+    reportDir: "cypress/reports/mochawesome",
+    overwrite: false,
+    html: true,
+    json: true,
+    timestamp: "mmddyyyy_HHMMss",
+  },
+
   video: false,
   screenshotOnRunFailure: true,
   viewportWidth: 1280,
