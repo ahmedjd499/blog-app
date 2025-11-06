@@ -27,7 +27,7 @@ describe('Roles and Permissions Tests', () => {
 
   beforeAll(async () => {
     // Connect to test database with retry and proper options for external DB
-    const mongoUri = process.env.MONGO_URI || process.env.MONGODB_TEST_URI || 'mongodb://localhost:27017/blog-test';
+    const mongoUri =  process.env.MONGO_TEST_URI || 'mongodb://localhost:27017/blog-test';
     console.log(mongoUri);
     
     try {
@@ -268,8 +268,8 @@ describe('Roles and Permissions Tests', () => {
 
     test('Admin can update user roles', async () => {
       const userToUpdate = await User.create({
-        username: 'testuser',
-        email: 'testuser@test.com',
+        username: 'testuser-role-update',
+        email: 'testuser-role-update@test.com',
         password: 'password123',
         role: 'reader'
       });

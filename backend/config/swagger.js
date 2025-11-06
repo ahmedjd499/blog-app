@@ -74,13 +74,8 @@ const options = {
               type: 'string',
               minLength: 6,
               example: 'password123'
-            },
-            role: {
-              type: 'string',
-              enum: ALL_ROLES,
-              example: ALL_ROLES[3],
-              description: 'Optional - defaults to Reader (Lecteur)'
             }
+           
           }
         },
         LoginRequest: {

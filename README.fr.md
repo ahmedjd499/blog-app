@@ -384,7 +384,7 @@ describe('Roles and Permissions Tests', () => {
 
   beforeAll(async () => {
     // Connexion à la base de test
-    await mongoose.connect(process.env.MONGODB_TEST_URI);
+    await mongoose.connect(process.env.MONGO_TEST_URI);
     
     // Créer des utilisateurs de test
     adminUser = await User.create({

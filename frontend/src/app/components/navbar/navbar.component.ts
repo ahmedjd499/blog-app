@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { NotificationService } from '../../services/notification.service';
+import { UserRole } from 'src/app/models/user.model';
 
 @Component({
   selector: 'app-navbar',
@@ -13,6 +14,9 @@ export class NavbarComponent implements OnInit {
   showNotificationPrompt = false;
   showNotificationDropdown = false;
   unreadCount = 0;
+
+  userRoles = UserRole
+
 
   constructor(
     public authService: AuthService,

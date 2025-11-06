@@ -1,6 +1,7 @@
 const Comment = require('../models/Comment');
 const Article = require('../models/Article');
 const { validationResult } = require('express-validator');
+const { UserRoles } = require('../config/roles');
 
 // @desc    Create new comment
 // @route   POST /api/comments
@@ -229,7 +230,7 @@ exports.deleteComment = async (req, res) => {
     const isAuthor = comment.author.toString() === userId;
 
     // Only comment author or admin can delete
-    if (!isAuthor && userRole !== 'Admin') {
+    if (!isAuthor && userRole !== UserRoles.ADMIN) {
       return res.status(403).json({
         success: false,
         message: 'You do not have permission to delete this comment'

@@ -5,6 +5,7 @@ module.exports = {
     'controllers/**/*.js',
     'middleware/**/*.js',
     'models/**/*.js',
+    'routes/**/*.js',
     '!**/node_modules/**',
     '!**/coverage/**'
   ],

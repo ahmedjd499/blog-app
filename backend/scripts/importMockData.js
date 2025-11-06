@@ -18,11 +18,14 @@ const modelMap = {
 };
 
 // Connect to MongoDB
-const connectDB = async () => {
+const connectDB = async (isTest = false) => {
   try {
-    const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/blog-platform';
+    const mongoUri = isTest
+      ? process.env.MONGO_URI_TEST || 'mongodb://localhost:27017/blog-platform-test'
+      : process.env.MONGO_URI || 'mongodb://localhost:27017/blog-platform';
+
     await mongoose.connect(mongoUri);
-    console.log('✅ MongoDB connected successfully');
+    console.log(`✅ MongoDB connected successfully (${isTest ? 'test' : 'default'} DB)`);
   } catch (error) {
     console.error('❌ MongoDB connection error:', error.message);
     process.exit(1);
@@ -112,11 +115,14 @@ const deleteData = async () => {
 
 // Main execution
 const main = async () => {
-  await connectDB();
-
-  // Check command line arguments
+  // Check command line arguments early so we can decide which DB to connect to
   const args = process.argv.slice(2);
+  const isTest = args.includes('--test') || args.includes('-t');
+  console.log(" importing into test : ",isTest);
   
+
+  await connectDB(isTest);
+
   if (args.includes('--delete') || args.includes('-d')) {
     await deleteData();
   } else {
