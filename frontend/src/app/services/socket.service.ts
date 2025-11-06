@@ -81,9 +81,37 @@ export class SocketService {
 
   onCommentNotification(): Observable<any> {
     return new Observable(observer => {
-      this.socket?.on('commentNotification', (notification: any) => {
+      if (!this.socket) {
+        console.error('Socket not initialized for commentNotification');
+        return;
+      }
+      console.log('👂 Listening for commentNotification events...');
+      this.socket.on('commentNotification', (notification: any) => {
+        console.log('🔔 commentNotification event received:', notification);
         observer.next(notification);
       });
+      
+      return () => {
+        this.socket?.off('commentNotification');
+      };
+    });
+  }
+
+  onReplyNotification(): Observable<any> {
+    return new Observable(observer => {
+      if (!this.socket) {
+        console.error('Socket not initialized for replyNotification');
+        return;
+      }
+      console.log('👂 Listening for replyNotification events...');
+      this.socket.on('replyNotification', (notification: any) => {
+        console.log('🔔 replyNotification event received:', notification);
+        observer.next(notification);
+      });
+      
+      return () => {
+        this.socket?.off('replyNotification');
+      };
     });
   }
 

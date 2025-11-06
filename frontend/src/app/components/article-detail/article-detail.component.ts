@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ArticleService } from '../../services/article.service';
 import { CommentService } from '../../services/comment.service';
 import { SocketService } from '../../services/socket.service';
+import { NotificationService } from '../../services/notification.service';
 import { AuthService } from '../../services/auth.service';
 import { BaseService } from '../../services/base.service';
 import { Article } from '../../models/article.model';
@@ -32,6 +33,7 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
     private articleService: ArticleService,
     private commentService: CommentService,
     private socketService: SocketService,
+    private notificationService: NotificationService,
     public authService: AuthService,
     private baseService: BaseService
   ) {}
@@ -42,12 +44,16 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
       this.loadArticle(id);
       this.loadComments(id);
       this.setupRealtimeComments(id);
+      // Mark this article as active for notification purposes
+      this.notificationService.setActiveArticleRoom(id);
     }
   }
 
   ngOnDestroy(): void {
     if (this.article) {
       this.socketService.leaveArticle(this.article._id);
+      // Remove from active article rooms
+      this.notificationService.removeActiveArticleRoom(this.article._id);
     }
     this.commentSubscription?.unsubscribe();
   }

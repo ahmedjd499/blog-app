@@ -25,6 +25,13 @@ const initializeSocketHandlers = (io) => {
   io.on('connection', (socket) => {
     console.log(`✅ User connected: ${socket.userId} (Socket: ${socket.id})`);
 
+    // Join user's personal notification room
+    socket.join(`user_${socket.userId}`);
+    console.log(`📮 User ${socket.userId} joined personal notification room: user_${socket.userId}`);
+    
+    // Log all rooms this socket is in
+    console.log(`🏠 Socket ${socket.id} is in rooms:`, Array.from(socket.rooms));
+
     // Join article room
     socket.on('joinArticle', (articleId) => {
       socket.join(`article_${articleId}`);
@@ -51,6 +58,12 @@ const initializeSocketHandlers = (io) => {
 
     // Handle new comment (emitted from controller)
     // This is handled in the comment controller
+
+    // Request notification permission
+    socket.on('requestNotificationPermission', (callback) => {
+      // Just acknowledge - permission is handled on client side
+      if (callback) callback({ success: true });
+    });
 
     // Handle typing indicator
     socket.on('typing', ({ articleId, username }) => {

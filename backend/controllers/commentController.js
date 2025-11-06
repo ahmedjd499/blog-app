@@ -27,8 +27,9 @@ exports.createComment = async (req, res) => {
     }
 
     // If replying to a comment, verify parent comment exists
+    let parentComment = null;
     if (parentCommentId) {
-      const parentComment = await Comment.findById(parentCommentId);
+      parentComment = await Comment.findById(parentCommentId).populate('author', 'username email role');
       if (!parentComment) {
         return res.status(404).json({
           success: false,
@@ -62,10 +63,24 @@ exports.createComment = async (req, res) => {
       console.log(`📡 Emitting newComment to room: article_${articleId}`);
       req.io.to(`article_${articleId}`).emit('newComment', comment);
       
-      // Notify article author if someone else commented
-      if (article.author.toString() !== req.user.userId) {
-        req.io.to(`user_${article.author}`).emit('commentNotification', {
-          message: `New comment on your article: ${article.title}`,
+      // If this is a reply, notify the parent comment author
+      if (parentComment && parentComment.author._id.toString() !== req.user.userId) {
+        const targetUserId = parentComment.author._id;
+        console.log(`📬 Emitting replyNotification to user_${targetUserId}`);
+        req.io.to(`user_${targetUserId}`).emit('replyNotification', {
+          message: `${comment.author.username} replied to your comment`,
+          reply: comment,
+          parentComment: { _id: parentComment._id, content: parentComment.content },
+          article: { _id: article._id, title: article.title }
+        });
+      }
+      
+      // Notify article author if someone else commented (but not on replies to avoid duplicate notifications)
+      if (!parentCommentId && article.author.toString() !== req.user.userId) {
+        const targetUserId = article.author;
+        console.log(`📬 Emitting commentNotification to user_${targetUserId}`);
+        req.io.to(`user_${targetUserId}`).emit('commentNotification', {
+          message: `${comment.author.username} commented on your article: ${article.title}`,
           comment,
           article: { _id: article._id, title: article.title }
         });

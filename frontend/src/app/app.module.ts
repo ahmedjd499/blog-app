@@ -21,6 +21,8 @@ import { ArticleFormComponent } from './components/article-form/article-form.com
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { AdminDashboardComponent } from './components/admin-dashboard/admin-dashboard.component';
+import { ClickOutsideDirective } from './directives/click-outside.directive';
+import { TimeAgoPipe } from './pipes/time-ago.pipe';
 
 @NgModule({
   declarations: [
@@ -35,7 +37,9 @@ import { AdminDashboardComponent } from './components/admin-dashboard/admin-dash
     ArticleFormComponent,
     NavbarComponent,
     UserProfileComponent,
-    AdminDashboardComponent
+    AdminDashboardComponent,
+    ClickOutsideDirective,
+    TimeAgoPipe
   ],
   imports: [
     BrowserModule,
