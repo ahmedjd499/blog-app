@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { ArticleService } from '../../services/article.service';
+import { UserService } from '../../services/user.service';
 import { User, UserRole } from '../../models/user.model';
 import { Article } from '../../models/article.model';
 
@@ -26,7 +27,8 @@ export class UserProfileComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     public authService: AuthService,
-    private articleService: ArticleService
+    private articleService: ArticleService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
@@ -41,18 +43,30 @@ export class UserProfileComponent implements OnInit {
     } else if (userId) {
       // View another user's profile
       this.isOwnProfile = currentUser?._id === userId;
-      this.loadUserProfile(userId);
+      if (this.isOwnProfile && currentUser) {
+        this.user = currentUser;
+      } else {
+        this.loadUserProfile(userId);
+      }
       this.loadUserArticles(userId);
     }
   }
 
   loadUserProfile(userId: string): void {
-    // For now, we'll just use the current user
-    // In a real app, you'd have a user service to fetch any user's profile
-    const currentUser = this.authService.currentUserValue;
-    if (currentUser && currentUser._id === userId) {
-      this.user = currentUser;
-    }
+    this.loading = true;
+    this.userService.getUserById(userId).subscribe({
+      next: (response) => {
+        if (response.data) {
+          this.user = response.data;
+        }
+        this.loading = false;
+      },
+      error: (err) => {
+        this.error = 'Failed to load user profile';
+        this.loading = false;
+        console.error(err);
+      }
+    });
   }
 
   loadUserArticles(userId: string): void {

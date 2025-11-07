@@ -9,7 +9,7 @@ import { AuthService } from '../../services/auth.service';
 import { BaseService } from '../../services/base.service';
 import { Article } from '../../models/article.model';
 import { Comment } from '../../models/comment.model';
-import { UserRole } from '../../models/user.model';
+import { User, UserRole } from '../../models/user.model';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -29,6 +29,9 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
   likesCount = 0;
   userHasLiked = false;
   submittingLike = false;
+  likedByUsers: User[] = [];
+  showLikesTooltip = false;
+  private tooltipTimeout: any;
   
   private commentSubscription?: Subscription;
   private likeSubscription?: Subscription;
@@ -52,6 +55,7 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
       this.loadArticle(id);
       this.loadComments(id);
       this.checkUserLikeStatus(id);
+      this.loadLikedByUsers(id);
       this.setupRealtimeComments(id);
       this.setupRealtimeLikes(id);
       // Mark this article as active for notification purposes
@@ -244,6 +248,19 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
     }
   }
 
+  loadLikedByUsers(articleId: string): void {
+    this.likeService.getLikesByArticle(articleId).subscribe({
+      next: (response) => {
+        if (response.data) {
+          this.likedByUsers = response.data.likedBy;
+        }
+      },
+      error: (err) => {
+        console.error('Failed to load liked by users:', err);
+      }
+    });
+  }
+
   setupRealtimeLikes(articleId: string): void {
     this.likeSubscription = this.socketService.onLikeArticle().subscribe({
       next: (data: any) => {
@@ -254,6 +271,8 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
           if (currentUser && data.userId === currentUser._id) {
             this.userHasLiked = true;
           }
+          // Reload the list of users who liked
+          this.loadLikedByUsers(articleId);
         }
       }
     });
@@ -267,6 +286,8 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
           if (currentUser && data.userId === currentUser._id) {
             this.userHasLiked = false;
           }
+          // Reload the list of users who liked
+          this.loadLikedByUsers(articleId);
         }
       }
     });
@@ -289,6 +310,25 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
         console.error('Failed to toggle like:', err);
       }
     });
+  }
+
+  showTooltip(): void {
+    if (this.tooltipTimeout) {
+      clearTimeout(this.tooltipTimeout);
+    }
+    this.showLikesTooltip = true;
+  }
+
+  hideTooltip(): void {
+    this.tooltipTimeout = setTimeout(() => {
+      this.showLikesTooltip = false;
+    }, 200);
+  }
+
+  navigateToProfile(userId: string, event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.router.navigate(['/profile', userId]);
   }
 
   getImageUrl(imagePath: string | undefined | null): string {

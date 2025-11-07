@@ -36,7 +36,7 @@ const routes: Routes = [
   // Authenticated users can view their own profile
   { path: 'profile', component: UserProfileComponent, canActivate: [AuthGuard] },
   // Anyone can view other profiles
-  { path: 'profile/:id', component: UserProfileComponent },
+  { path: 'profile/:id', component: UserProfileComponent},
   // Admin dashboard - only admins
   { 
     path: 'admin', 

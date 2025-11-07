@@ -250,3 +250,45 @@ exports.getCurrentUser = async (req, res) => {
     });
   }
 };
+
+// @desc    Get public user profile by ID
+// @route   GET /api/auth/user/:id
+// @access  Public
+exports.getUserById = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).select('-password -refreshToken');
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    res.json({
+      success: true,
+      data: {
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+        createdAt: user.createdAt
+      }
+    });
+
+  } catch (error) {
+    console.error('Get user by ID error:', error);
+    
+    if (error.kind === 'ObjectId') {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching user data'
+    });
+  }
+};

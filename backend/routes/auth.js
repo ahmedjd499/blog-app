@@ -175,6 +175,9 @@ router.post('/register', authLimiter, registerValidation, authController.registe
 router.post('/login', authLimiter, loginValidation, authController.login);
 router.post('/refresh', authLimiter, authController.refreshToken);
 
+// Public user profile
+router.get('/user/:id', authController.getUserById);
+
 // Protected routes
 router.post('/logout', auth, authController.logout);
 router.get('/me', auth, authController.getCurrentUser);
