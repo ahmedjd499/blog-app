@@ -51,7 +51,7 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
     if (id) {
       this.loadArticle(id);
       this.loadComments(id);
-      this.loadLikes(id);
+      this.checkUserLikeStatus(id);
       this.setupRealtimeComments(id);
       this.setupRealtimeLikes(id);
       // Mark this article as active for notification purposes
@@ -78,6 +78,8 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
       next: (response) => {
         if (response.data) {
           this.article = response.data;
+          // Set likesCount from article data
+          this.likesCount = this.article.likesCount || 0;
         }
         this.loading = false;
       },
@@ -226,19 +228,8 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
            currentUser._id === this.article.author._id;
   }
 
-  loadLikes(articleId: string): void {
-    this.likeService.getLikesByArticle(articleId).subscribe({
-      next: (response) => {
-        if (response.data) {
-          this.likesCount = response.data.count;
-        }
-      },
-      error: (err) => {
-        console.error('Failed to load likes:', err);
-      }
-    });
-
-    // Check if current user liked this article
+  checkUserLikeStatus(articleId: string): void {
+    // Only check if current user liked this article
     if (this.authService.isLoggedIn()) {
       this.likeService.checkUserLike(articleId).subscribe({
         next: (response) => {
