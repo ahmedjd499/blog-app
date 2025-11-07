@@ -11,6 +11,8 @@ npm test
 ### E2E Tests with Report
 ```bash
 cd frontend
+npm run e2e:open
+or
 npm run e2e:report
 ```
 
