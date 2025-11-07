@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ArticleService } from '../../services/article.service';
 import { CommentService } from '../../services/comment.service';
+import { LikeService } from '../../services/like.service';
 import { SocketService } from '../../services/socket.service';
 import { NotificationService } from '../../services/notification.service';
 import { AuthService } from '../../services/auth.service';
@@ -25,13 +26,20 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
   newComment = '';
   submittingComment = false;
   
+  likesCount = 0;
+  userHasLiked = false;
+  submittingLike = false;
+  
   private commentSubscription?: Subscription;
+  private likeSubscription?: Subscription;
+  private unlikeSubscription?: Subscription;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private articleService: ArticleService,
     private commentService: CommentService,
+    private likeService: LikeService,
     private socketService: SocketService,
     private notificationService: NotificationService,
     public authService: AuthService,
@@ -43,7 +51,9 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
     if (id) {
       this.loadArticle(id);
       this.loadComments(id);
+      this.loadLikes(id);
       this.setupRealtimeComments(id);
+      this.setupRealtimeLikes(id);
       // Mark this article as active for notification purposes
       this.notificationService.setActiveArticleRoom(id);
     }
@@ -56,6 +66,8 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
       this.notificationService.removeActiveArticleRoom(this.article._id);
     }
     this.commentSubscription?.unsubscribe();
+    this.likeSubscription?.unsubscribe();
+    this.unlikeSubscription?.unsubscribe();
   }
 
   loadArticle(id: string): void {
@@ -212,6 +224,80 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
     return currentUser.role === UserRole.ADMIN || 
            currentUser.role === UserRole.EDITOR ||
            currentUser._id === this.article.author._id;
+  }
+
+  loadLikes(articleId: string): void {
+    this.likeService.getLikesByArticle(articleId).subscribe({
+      next: (response) => {
+        if (response.data) {
+          this.likesCount = response.data.count;
+        }
+      },
+      error: (err) => {
+        console.error('Failed to load likes:', err);
+      }
+    });
+
+    // Check if current user liked this article
+    if (this.authService.isLoggedIn()) {
+      this.likeService.checkUserLike(articleId).subscribe({
+        next: (response) => {
+          if (response.data) {
+            this.userHasLiked = response.data.liked;
+          }
+        },
+        error: (err) => {
+          console.error('Failed to check like status:', err);
+        }
+      });
+    }
+  }
+
+  setupRealtimeLikes(articleId: string): void {
+    this.likeSubscription = this.socketService.onLikeArticle().subscribe({
+      next: (data: any) => {
+        if (data.articleId === articleId) {
+          this.likesCount++;
+          // Update userHasLiked if current user liked
+          const currentUser = this.authService.currentUserValue;
+          if (currentUser && data.userId === currentUser._id) {
+            this.userHasLiked = true;
+          }
+        }
+      }
+    });
+
+    this.unlikeSubscription = this.socketService.onUnlikeArticle().subscribe({
+      next: (data: any) => {
+        if (data.articleId === articleId) {
+          this.likesCount--;
+          // Update userHasLiked if current user unliked
+          const currentUser = this.authService.currentUserValue;
+          if (currentUser && data.userId === currentUser._id) {
+            this.userHasLiked = false;
+          }
+        }
+      }
+    });
+  }
+
+  toggleLike(): void {
+    if (!this.article || !this.authService.isLoggedIn() || this.submittingLike) {
+      return;
+    }
+
+    this.submittingLike = true;
+
+    this.likeService.toggleLike({ articleId: this.article._id }).subscribe({
+      next: (response) => {
+        this.submittingLike = false;
+        // Like state will be updated via socket.io real-time update
+      },
+      error: (err) => {
+        this.submittingLike = false;
+        console.error('Failed to toggle like:', err);
+      }
+    });
   }
 
   getImageUrl(imagePath: string | undefined | null): string {

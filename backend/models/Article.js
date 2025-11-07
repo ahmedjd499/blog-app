@@ -44,4 +44,15 @@ articleSchema.index({ author: 1, createdAt: -1 });
 articleSchema.index({ tags: 1 });
 articleSchema.index({ title: 'text', content: 'text' }); // Text search
 
+// Virtual for likes
+articleSchema.virtual('likes', {
+  ref: 'Like',
+  localField: '_id',
+  foreignField: 'article'
+});
+
+// Ensure virtuals are included in JSON
+articleSchema.set('toJSON', { virtuals: true });
+articleSchema.set('toObject', { virtuals: true });
+
 module.exports = mongoose.model('Article', articleSchema);

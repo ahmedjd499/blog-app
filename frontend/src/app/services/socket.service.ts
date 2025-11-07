@@ -115,6 +115,60 @@ export class SocketService {
     });
   }
 
+  onLikeArticle(): Observable<any> {
+    return new Observable(observer => {
+      if (!this.socket) {
+        console.error('Socket is not initialized');
+        return;
+      }
+      
+      this.socket.on('likeArticle', (data: any) => {
+        console.log('Socket received likeArticle event:', data);
+        observer.next(data);
+      });
+      
+      return () => {
+        this.socket?.off('likeArticle');
+      };
+    });
+  }
+
+  onUnlikeArticle(): Observable<any> {
+    return new Observable(observer => {
+      if (!this.socket) {
+        console.error('Socket is not initialized');
+        return;
+      }
+      
+      this.socket.on('unlikeArticle', (data: any) => {
+        console.log('Socket received unlikeArticle event:', data);
+        observer.next(data);
+      });
+      
+      return () => {
+        this.socket?.off('unlikeArticle');
+      };
+    });
+  }
+
+  onLikeNotification(): Observable<any> {
+    return new Observable(observer => {
+      if (!this.socket) {
+        console.error('Socket not initialized for likeNotification');
+        return;
+      }
+      console.log('👂 Listening for likeNotification events...');
+      this.socket.on('likeNotification', (notification: any) => {
+        console.log('🔔 likeNotification event received:', notification);
+        observer.next(notification);
+      });
+      
+      return () => {
+        this.socket?.off('likeNotification');
+      };
+    });
+  }
+
   emitTyping(articleId: string): void {
     this.socket?.emit('typing', articleId);
   }

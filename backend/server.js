@@ -77,6 +77,7 @@ app.get('/api/health', (req, res) => {
 const authRoutes = require('./routes/auth');
 const articleRoutes = require('./routes/articles');
 const commentRoutes = require('./routes/comments');
+const likeRoutes = require('./routes/likes');
 const adminRoutes = require('./routes/admin');
 const notificationRoutes = require('./routes/notifications');
 
@@ -84,6 +85,7 @@ const notificationRoutes = require('./routes/notifications');
 app.use('/api/auth', authRoutes);
 app.use('/api/articles', articleRoutes);
 app.use('/api/comments', commentRoutes);
+app.use('/api/likes', likeRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/notifications', notificationRoutes);
 
