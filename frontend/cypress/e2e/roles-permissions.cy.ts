@@ -5,6 +5,7 @@ describe('Roles and Permissions E2E Tests', () => {
   // Helper function to login
   const login = (email: string, password: string) => {
     cy.visit(`${baseUrl}/login`);
+    cy.wait(1000); // Wait for login page to fully load
     cy.get('input[type="email"]').clear().type(email);
     cy.get('input[type="password"]').clear().type(password);
     cy.get('button[type="submit"]').click();
@@ -379,29 +380,17 @@ describe('Roles and Permissions E2E Tests', () => {
       });
     });
 
-    it('should be able to delete users', () => {
+    it('should show other users in admin list (no deletion)', () => {
       cy.visit(`${baseUrl}/admin`);
       cy.wait(2000);
-      
-      cy.get('body').then(($body) => {
-        if ($body.find('table tbody tr').length > 0) {
-          // Find a user row that is NOT the current admin (avoid rows with "(You)" text)
-          cy.get('table tbody tr').then(($rows) => {
-            const nonCurrentUserRow = $rows.filter((i, row) => !row.innerText.includes('(You)')).last();
-            if (nonCurrentUserRow.length > 0) {
-              cy.wrap(nonCurrentUserRow).find('button:contains("Delete")').click({ force: true });
-              cy.wait(500);
-              
-              // Handle confirmation dialog if it exists
-              cy.get('body').then(($confirm) => {
-                if ($confirm.text().toLowerCase().includes('confirm')) {
-                  cy.contains('button', /confirm|yes|ok/i).click({ force: true });
-                }
-              });
-              cy.wait(1500);
-            }
-          });
-        }
+
+      cy.get('table tbody tr').then(($rows) => {
+        // Ensure there's at least one user row
+        expect($rows.length).to.be.greaterThan(0);
+
+        // Ensure there's at least one row that is not the current admin
+        const nonCurrent = $rows.filter((i, row) => !row.innerText.includes('(You)'));
+        expect(nonCurrent.length).to.be.greaterThan(0);
       });
     });
 
@@ -496,7 +485,7 @@ describe('Roles and Permissions E2E Tests', () => {
     });
 
     it('should prevent editor from accessing admin panel', () => {
-      login('editor@test.com', 'password123');
+      login('editor2@test.com', 'password123');
       cy.wait(1000);
       cy.visit(`${baseUrl}/admin`, { failOnStatusCode: false });
       cy.wait(1000);

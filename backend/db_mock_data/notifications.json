@@ -1,22 +1,22 @@
 [
   {
-    "_id": "690cc892e5c3a47bf8884242",
-    "recipient": "690cc892e5c3a47bf8884232",
+    "_id": "690db2145c5d484f0a562a50",
+    "recipient": "690db2145c5d484f0a562a3f",
     "type": "comment",
     "title": "New comment on your article",
     "message": "reader commented on \"Getting Started with MEAN Stack Development\"",
-    "article": "690cc892e5c3a47bf8884238",
+    "article": "690db2145c5d484f0a562a46",
     "articleTitle": "Getting Started with MEAN Stack Development",
     "read": false,
     "createdAt": "2024-02-02T00:00:00.000Z"
   },
   {
-    "_id": "690cc892e5c3a47bf8884243",
-    "recipient": "690cc892e5c3a47bf8884234",
+    "_id": "690db2145c5d484f0a562a51",
+    "recipient": "690db2145c5d484f0a562a42",
     "type": "comment",
     "title": "New comment on your article",
     "message": "john_writer commented on \"Real-Time Features with Socket.io\"",
-    "article": "690cc892e5c3a47bf8884239",
+    "article": "690db2145c5d484f0a562a47",
     "articleTitle": "Real-Time Features with Socket.io",
     "read": true,
     "createdAt": "2024-02-06T00:00:00.000Z"

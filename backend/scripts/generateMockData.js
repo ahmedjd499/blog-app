@@ -13,6 +13,7 @@ const generateMockData = async () => {
   // Generate user IDs
   const adminId = new ObjectId();
   const editorId = new ObjectId();
+  const editorId2 = new ObjectId();
   const writerId = new ObjectId();
   const readerId = new ObjectId();
   const johnId = new ObjectId();
@@ -37,6 +38,15 @@ const generateMockData = async () => {
       role: 'editor',
       createdAt: new Date('2024-01-02'),
       updatedAt: new Date('2024-01-02')
+    },
+    {
+      _id: editorId2,
+      username: 'editor2',
+      email: 'editor2@test.com',
+      password: hashedPassword,
+      role: 'editor',
+      createdAt: new Date('2024-01-12'),
+      updatedAt: new Date('2024-01-12')
     },
     {
       _id: writerId,

@@ -1,54 +1,63 @@
 [
   {
-    "_id": "690cc892e5c3a47bf8884232",
+    "_id": "690db2145c5d484f0a562a3f",
     "username": "admin",
     "email": "admin@test.com",
-    "password": "$2b$10$WdcnJ80JFIzxp0u0szd9OeV0EYyefP.se94whkaXH2l6G3O6iq1ey",
+    "password": "$2b$10$EzE8ZMsKmRgtYIYWLkRY6uDxz9XK4EZxeHIkq0kJ695Jp.EOxRc0W",
     "role": "admin",
     "createdAt": "2024-01-01T00:00:00.000Z",
     "updatedAt": "2024-01-01T00:00:00.000Z"
   },
   {
-    "_id": "690cc892e5c3a47bf8884233",
+    "_id": "690db2145c5d484f0a562a40",
     "username": "editor",
     "email": "editor@test.com",
-    "password": "$2b$10$WdcnJ80JFIzxp0u0szd9OeV0EYyefP.se94whkaXH2l6G3O6iq1ey",
+    "password": "$2b$10$EzE8ZMsKmRgtYIYWLkRY6uDxz9XK4EZxeHIkq0kJ695Jp.EOxRc0W",
     "role": "editor",
     "createdAt": "2024-01-02T00:00:00.000Z",
     "updatedAt": "2024-01-02T00:00:00.000Z"
   },
   {
-    "_id": "690cc892e5c3a47bf8884234",
+    "_id": "690db2145c5d484f0a562a41",
+    "username": "editor2",
+    "email": "editor2@test.com",
+    "password": "$2b$10$EzE8ZMsKmRgtYIYWLkRY6uDxz9XK4EZxeHIkq0kJ695Jp.EOxRc0W",
+    "role": "editor",
+    "createdAt": "2024-01-12T00:00:00.000Z",
+    "updatedAt": "2024-01-12T00:00:00.000Z"
+  },
+  {
+    "_id": "690db2145c5d484f0a562a42",
     "username": "writer",
     "email": "writer@test.com",
-    "password": "$2b$10$WdcnJ80JFIzxp0u0szd9OeV0EYyefP.se94whkaXH2l6G3O6iq1ey",
+    "password": "$2b$10$EzE8ZMsKmRgtYIYWLkRY6uDxz9XK4EZxeHIkq0kJ695Jp.EOxRc0W",
     "role": "writer",
     "createdAt": "2024-01-03T00:00:00.000Z",
     "updatedAt": "2024-01-03T00:00:00.000Z"
   },
   {
-    "_id": "690cc892e5c3a47bf8884235",
+    "_id": "690db2145c5d484f0a562a43",
     "username": "reader",
     "email": "reader@test.com",
-    "password": "$2b$10$WdcnJ80JFIzxp0u0szd9OeV0EYyefP.se94whkaXH2l6G3O6iq1ey",
+    "password": "$2b$10$EzE8ZMsKmRgtYIYWLkRY6uDxz9XK4EZxeHIkq0kJ695Jp.EOxRc0W",
     "role": "reader",
     "createdAt": "2024-01-04T00:00:00.000Z",
     "updatedAt": "2024-01-04T00:00:00.000Z"
   },
   {
-    "_id": "690cc892e5c3a47bf8884236",
+    "_id": "690db2145c5d484f0a562a44",
     "username": "john_writer",
     "email": "john@example.com",
-    "password": "$2b$10$WdcnJ80JFIzxp0u0szd9OeV0EYyefP.se94whkaXH2l6G3O6iq1ey",
+    "password": "$2b$10$EzE8ZMsKmRgtYIYWLkRY6uDxz9XK4EZxeHIkq0kJ695Jp.EOxRc0W",
     "role": "writer",
     "createdAt": "2024-01-05T00:00:00.000Z",
     "updatedAt": "2024-01-05T00:00:00.000Z"
   },
   {
-    "_id": "690cc892e5c3a47bf8884237",
+    "_id": "690db2145c5d484f0a562a45",
     "username": "sarah_editor",
     "email": "sarah@example.com",
-    "password": "$2b$10$WdcnJ80JFIzxp0u0szd9OeV0EYyefP.se94whkaXH2l6G3O6iq1ey",
+    "password": "$2b$10$EzE8ZMsKmRgtYIYWLkRY6uDxz9XK4EZxeHIkq0kJ695Jp.EOxRc0W",
     "role": "editor",
     "createdAt": "2024-01-06T00:00:00.000Z",
     "updatedAt": "2024-01-06T00:00:00.000Z"
