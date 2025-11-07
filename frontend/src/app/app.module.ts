@@ -23,6 +23,7 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
 import { AdminDashboardComponent } from './components/admin-dashboard/admin-dashboard.component';
 import { ClickOutsideDirective } from './directives/click-outside.directive';
 import { TimeAgoPipe } from './pipes/time-ago.pipe';
+import { SortArticlesPipe } from './pipes/sort-articles.pipe';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { TimeAgoPipe } from './pipes/time-ago.pipe';
     UserProfileComponent,
     AdminDashboardComponent,
     ClickOutsideDirective,
-    TimeAgoPipe
+    TimeAgoPipe,
+    SortArticlesPipe
   ],
   imports: [
     BrowserModule,

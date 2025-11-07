@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ArticleService } from '../../services/article.service';
 import { AuthService } from '../../services/auth.service';
 import { Article } from '../../models/article.model';
+import { UserRole } from '../../models/user.model';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import { SortField, SortOrder } from '../../pipes/sort-articles.pipe';
 
 @Component({
   selector: 'app-article-list',
@@ -13,6 +15,7 @@ export class ArticleListComponent implements OnInit {
   articles: Article[] = [];
   loading = false;
   error = '';
+  userRoles = UserRole;
   
   // Pagination
   currentPage = 1;
@@ -25,6 +28,10 @@ export class ArticleListComponent implements OnInit {
   selectedTag = '';
   availableTags: string[] = [];
   private searchSubject = new Subject<string>();
+  
+  // Sorting
+  sortField: SortField = 'createdAt';
+  sortOrder: SortOrder = 'desc';
 
   constructor(
     private articleService: ArticleService,
@@ -83,6 +90,17 @@ export class ArticleListComponent implements OnInit {
     this.selectedTag = '';
     this.currentPage = 1;
     this.loadArticles();
+  }
+
+  onSortChange(field: SortField): void {
+    if (this.sortField === field) {
+      // Toggle order if same field
+      this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+    } else {
+      // New field, default to descending
+      this.sortField = field;
+      this.sortOrder = field === 'title' ? 'asc' : 'desc';
+    }
   }
 
   goToPage(page: number): void {

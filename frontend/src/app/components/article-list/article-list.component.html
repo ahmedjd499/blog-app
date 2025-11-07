@@ -6,13 +6,15 @@
       <h1 class="text-4xl font-extrabold text-gray-900 mb-4">All Articles</h1>
       <div class="flex justify-between items-center">
         <p class="text-lg text-gray-600">Discover and explore our latest articles</p>
-        <a 
-          *ngIf="authService.isLoggedIn()" 
-          routerLink="/articles/create"
-          class="px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition"
-        >
-          + Create Article
-        </a>
+        <ng-container *ngIf="authService.currentUser$ | async as user">
+          <a 
+            *ngIf="user.role !== userRoles.READER"
+            routerLink="/articles/create"
+            class="px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition"
+          >
+            + Create Article
+          </a>
+        </ng-container>
       </div>
     </div>
 
@@ -40,6 +42,48 @@
             <option value="">All Tags</option>
             <option *ngFor="let tag of availableTags" [value]="tag">{{ tag }}</option>
           </select>
+        </div>
+      </div>
+      
+      <!-- Sorting Options -->
+      <div class="mt-4 pt-4 border-t border-gray-200">
+        <label class="block text-sm font-medium text-gray-700 mb-3">Sort by</label>
+        <div class="flex flex-wrap gap-2">
+          <button 
+            (click)="onSortChange('title')"
+            [class.bg-purple-600]="sortField === 'title'"
+            [class.text-white]="sortField === 'title'"
+            [class.bg-gray-100]="sortField !== 'title'"
+            [class.text-gray-700]="sortField !== 'title'"
+            class="px-4 py-2 rounded-lg font-medium hover:bg-purple-500 hover:text-white transition-colors flex items-center gap-2"
+          >
+            Title
+            <span *ngIf="sortField === 'title'">{{ sortOrder === 'asc' ? '↑' : '↓' }}</span>
+          </button>
+          
+          <button 
+            (click)="onSortChange('createdAt')"
+            [class.bg-purple-600]="sortField === 'createdAt'"
+            [class.text-white]="sortField === 'createdAt'"
+            [class.bg-gray-100]="sortField !== 'createdAt'"
+            [class.text-gray-700]="sortField !== 'createdAt'"
+            class="px-4 py-2 rounded-lg font-medium hover:bg-purple-500 hover:text-white transition-colors flex items-center gap-2"
+          >
+            Date Created
+            <span *ngIf="sortField === 'createdAt'">{{ sortOrder === 'asc' ? '↑' : '↓' }}</span>
+          </button>
+          
+          <button 
+            (click)="onSortChange('commentsCount')"
+            [class.bg-purple-600]="sortField === 'commentsCount'"
+            [class.text-white]="sortField === 'commentsCount'"
+            [class.bg-gray-100]="sortField !== 'commentsCount'"
+            [class.text-gray-700]="sortField !== 'commentsCount'"
+            class="px-4 py-2 rounded-lg font-medium hover:bg-purple-500 hover:text-white transition-colors flex items-center gap-2"
+          >
+            Comments
+            <span *ngIf="sortField === 'commentsCount'">{{ sortOrder === 'asc' ? '↑' : '↓' }}</span>
+          </button>
         </div>
       </div>
       
@@ -73,7 +117,7 @@
     <!-- Articles Grid -->
     <div *ngIf="!loading && articles.length > 0" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
       <app-article-card 
-        *ngFor="let article of articles" 
+        *ngFor="let article of articles | sortArticles:sortField:sortOrder" 
         [article]="article"
       ></app-article-card>
     </div>

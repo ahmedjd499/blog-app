@@ -63,26 +63,72 @@ exports.getAllArticles = async (req, res) => {
     const search = req.query.search;
 
     // Build query
-    let query = {};
+    let matchQuery = {};
     if (tag) {
-      query.tags = tag;
+      matchQuery.tags = tag;
     }
     if (search) {
-      query.$text = { $search: search };
+      matchQuery.$text = { $search: search };
     }
 
-    const articles = await Article.find(query)
-      .populate('author', 'username email role')
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limit);
+    const Comment = require('../models/Comment');
 
-    const total = await Article.countDocuments(query);
+    // Use aggregation to include comments count
+    const articlesWithComments = await Article.aggregate([
+      { $match: matchQuery },
+      { $sort: { createdAt: -1 } },
+      { $skip: skip },
+      { $limit: limit },
+      {
+        $lookup: {
+          from: 'comments',
+          localField: '_id',
+          foreignField: 'article',
+          as: 'comments'
+        }
+      },
+      {
+        $addFields: {
+          commentsCount: { $size: '$comments' }
+        }
+      },
+      {
+        $project: {
+          comments: 0 // Remove comments array, keep only count
+        }
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'author',
+          foreignField: '_id',
+          as: 'author'
+        }
+      },
+      { $unwind: '$author' },
+      {
+        $project: {
+          title: 1,
+          content: 1,
+          image: 1,
+          tags: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          commentsCount: 1,
+          'author._id': 1,
+          'author.username': 1,
+          'author.email': 1,
+          'author.role': 1
+        }
+      }
+    ]);
+
+    const total = await Article.countDocuments(matchQuery);
 
     res.json({
       success: true,
       data: {
-        articles,
+        articles: articlesWithComments,
         pagination: {
           page,
           limit,
@@ -107,10 +153,65 @@ exports.getAllArticles = async (req, res) => {
 // @access  Public
 exports.getArticleById = async (req, res) => {
   try {
-    const article = await Article.findById(req.params.id)
-      .populate('author', 'username email role');
+    const Comment = require('../models/Comment');
+    const mongoose = require('mongoose');
 
-    if (!article) {
+    // Validate ObjectId
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(404).json({
+        success: false,
+        message: 'Article not found'
+      });
+    }
+
+    // Use aggregation to include comments count
+    const articleWithComments = await Article.aggregate([
+      { $match: { _id: new mongoose.Types.ObjectId(req.params.id) } },
+      {
+        $lookup: {
+          from: 'comments',
+          localField: '_id',
+          foreignField: 'article',
+          as: 'comments'
+        }
+      },
+      {
+        $addFields: {
+          commentsCount: { $size: '$comments' }
+        }
+      },
+      {
+        $project: {
+          comments: 0 // Remove comments array, keep only count
+        }
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'author',
+          foreignField: '_id',
+          as: 'author'
+        }
+      },
+      { $unwind: '$author' },
+      {
+        $project: {
+          title: 1,
+          content: 1,
+          image: 1,
+          tags: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          commentsCount: 1,
+          'author._id': 1,
+          'author.username': 1,
+          'author.email': 1,
+          'author.role': 1
+        }
+      }
+    ]);
+
+    if (!articleWithComments || articleWithComments.length === 0) {
       return res.status(404).json({
         success: false,
         message: 'Article not found'
@@ -119,7 +220,7 @@ exports.getArticleById = async (req, res) => {
 
     res.json({
       success: true,
-      data: article
+      data: articleWithComments[0]
     });
 
   } catch (error) {

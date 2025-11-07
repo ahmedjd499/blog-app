@@ -9,6 +9,7 @@ export interface Article {
   author: User;
   createdAt: Date;
   updatedAt: Date;
+  commentsCount?: number;
 }
 
 export interface ArticleCreateRequest {
