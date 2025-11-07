@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { Article } from '../models/article.model';
 
-export type SortField = 'title' | 'createdAt' | 'commentsCount';
+export type SortField = 'title' | 'createdAt' | 'commentsCount' | 'likesCount';
 export type SortOrder = 'asc' | 'desc';
 
 @Pipe({
@@ -33,6 +33,12 @@ export class SortArticlesPipe implements PipeTransform {
           const commentsA = a.commentsCount || 0;
           const commentsB = b.commentsCount || 0;
           comparison = commentsA - commentsB;
+          break;
+        
+        case 'likesCount':
+          const likesA = a.likesCount || 0;
+          const likesB = b.likesCount || 0;
+          comparison = likesA - likesB;
           break;
       }
 

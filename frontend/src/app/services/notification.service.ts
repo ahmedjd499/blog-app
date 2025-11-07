@@ -7,7 +7,7 @@ import { environment } from '../../environments/environment';
 
 export interface InAppNotification {
   id: string;
-  type: 'comment' | 'reply';
+  type: 'comment' | 'reply' | 'like';
   title: string;
   message: string;
   articleId: string;
@@ -147,6 +147,33 @@ export class NotificationService {
               data: {
                 articleId: data.article._id,
                 commentId: data.reply._id,
+                url: `/articles/${data.article._id}`
+              }
+            }
+          );
+        }
+      }
+    });
+
+    // Listen for like notifications
+    this.socketService.onLikeNotification().subscribe({
+      next: (data: any) => {
+        console.log('👍 Like notification received:', data);
+        
+        const isViewingArticle = this.activeArticleRooms.has(data.article._id);
+        
+        // Fetch notifications from backend to get the saved notification with proper ID
+        setTimeout(() => this.fetchNotifications(), 500);
+        
+        if (!isViewingArticle) {
+          this.showNotification(
+            '❤️ Someone Liked Your Article',
+            {
+              body: data.message,
+              tag: `like-${data.like._id}`,
+              requireInteraction: false,
+              data: {
+                articleId: data.article._id,
                 url: `/articles/${data.article._id}`
               }
             }

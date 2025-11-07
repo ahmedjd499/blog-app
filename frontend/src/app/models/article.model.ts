@@ -10,6 +10,7 @@ export interface Article {
   createdAt: Date;
   updatedAt: Date;
   commentsCount?: number;
+  likesCount?: number;
 }
 
 export interface ArticleCreateRequest {

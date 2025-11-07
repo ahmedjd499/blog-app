@@ -72,8 +72,9 @@ exports.getAllArticles = async (req, res) => {
     }
 
     const Comment = require('../models/Comment');
+    const Like = require('../models/Like');
 
-    // Use aggregation to include comments count
+    // Use aggregation to include comments count and likes count
     const articlesWithComments = await Article.aggregate([
       { $match: matchQuery },
       { $sort: { createdAt: -1 } },
@@ -88,13 +89,23 @@ exports.getAllArticles = async (req, res) => {
         }
       },
       {
+        $lookup: {
+          from: 'likes',
+          localField: '_id',
+          foreignField: 'article',
+          as: 'likes'
+        }
+      },
+      {
         $addFields: {
-          commentsCount: { $size: '$comments' }
+          commentsCount: { $size: '$comments' },
+          likesCount: { $size: '$likes' }
         }
       },
       {
         $project: {
-          comments: 0 // Remove comments array, keep only count
+          comments: 0, // Remove comments array, keep only count
+          likes: 0 // Remove likes array, keep only count
         }
       },
       {
@@ -115,6 +126,7 @@ exports.getAllArticles = async (req, res) => {
           createdAt: 1,
           updatedAt: 1,
           commentsCount: 1,
+          likesCount: 1,
           'author._id': 1,
           'author.username': 1,
           'author.email': 1,
@@ -154,6 +166,7 @@ exports.getAllArticles = async (req, res) => {
 exports.getArticleById = async (req, res) => {
   try {
     const Comment = require('../models/Comment');
+    const Like = require('../models/Like');
     const mongoose = require('mongoose');
 
     // Validate ObjectId
@@ -164,7 +177,7 @@ exports.getArticleById = async (req, res) => {
       });
     }
 
-    // Use aggregation to include comments count
+    // Use aggregation to include comments count and likes count
     const articleWithComments = await Article.aggregate([
       { $match: { _id: new mongoose.Types.ObjectId(req.params.id) } },
       {
@@ -176,13 +189,23 @@ exports.getArticleById = async (req, res) => {
         }
       },
       {
+        $lookup: {
+          from: 'likes',
+          localField: '_id',
+          foreignField: 'article',
+          as: 'likes'
+        }
+      },
+      {
         $addFields: {
-          commentsCount: { $size: '$comments' }
+          commentsCount: { $size: '$comments' },
+          likesCount: { $size: '$likes' }
         }
       },
       {
         $project: {
-          comments: 0 // Remove comments array, keep only count
+          comments: 0, // Remove comments array, keep only count
+          likes: 0 // Remove likes array, keep only count
         }
       },
       {
@@ -203,6 +226,7 @@ exports.getArticleById = async (req, res) => {
           createdAt: 1,
           updatedAt: 1,
           commentsCount: 1,
+          likesCount: 1,
           'author._id': 1,
           'author.username': 1,
           'author.email': 1,
